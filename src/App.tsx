@@ -10,7 +10,7 @@ import './App.css';
 
 const App: React.FC = () => {
 
-  const [dishes, setDishes] = useState(DISHES);
+  const [dishes] = useState(DISHES);
 
   return (
     <div>

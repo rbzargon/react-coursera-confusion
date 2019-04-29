@@ -1,30 +1,17 @@
 import React, { useState } from 'react';
 import {
     Card,
-    CardBody,
     CardImg,
     CardImgOverlay,
-    CardText,
     CardTitle
 } from 'reactstrap';
 
 import { IDish } from '../shared/dishes';
 
+import { DishDetail } from './DishDetail';
+
 interface IMenuProps {
     dishes: Array<IDish>,
-}
-
-const renderDish = (dish: IDish) => {
-    return (!!dish ?
-        <Card>
-            <CardImg width="100%" object src={dish.image} alt={dish.name} />>
-                <CardBody>
-                <CardTitle>{dish.name}</CardTitle>
-                <CardText>{dish.description}</CardText>
-            </CardBody>
-        </Card> :
-        <></>);
-
 }
 
 const Menu: React.FC<IMenuProps> = (props) => {
@@ -53,9 +40,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
             <div className="row">
                 {menu}
             </div>
-            <div className="row">
-                {renderDish(selectedDish)}
-            </div>
+            <DishDetail dish={selectedDish} />
         </div>
     );
 };
