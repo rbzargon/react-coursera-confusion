@@ -36,7 +36,9 @@ const renderComments = (comments: Array<IComment>) => {
                 <h4>Comments</h4>
                 {comments.map((c, idx) =>
                     <blockquote key={idx} className="blockquote">{c.comment}
-                        <footer className="blockquote-footer">{c.author} {c.date}</footer>
+                        <footer className="blockquote-footer">
+                            <b>{c.author}</b> {new Date(c.date).toLocaleString()}
+                        </footer>
                     </blockquote>)}
             </> :
             <div></div>
