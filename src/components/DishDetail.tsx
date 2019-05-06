@@ -49,12 +49,14 @@ export const DishDetail: React.FC<IDishDetailProps> = (props) => {
     const { dish } = props;
     return (
         !!dish ?
-            <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    {renderDish(dish)}
-                </div>
-                <div className="col-12 col-md-5 m-1">
-                    {renderComments(dish.comments)}
+            <div className="container">
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        {renderDish(dish)}
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        {renderComments(dish.comments)}
+                    </div>
                 </div>
             </div> :
             <div></div>
