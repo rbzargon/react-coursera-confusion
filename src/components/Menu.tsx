@@ -7,7 +7,6 @@ import {
 } from 'reactstrap';
 
 import { IDish } from '../shared/dishes';
-import { DishDetail } from './DishDetail';
 
 interface IMenuProps {
     dishes: Array<IDish>,
