@@ -1,10 +1,4 @@
-export interface IComment {
-    id: number,
-    rating: number,
-    comment: string,
-    author: string,
-    date: string
-}
+import { IComment } from './comments';
 
 export interface IDish {
     id: number,
