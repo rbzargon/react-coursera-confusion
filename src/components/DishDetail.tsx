@@ -37,7 +37,7 @@ const renderComments = (comments: Array<IComment>) => {
                 {comments.map((c, idx) =>
                     <blockquote key={idx} className="blockquote">{c.comment}
                         <footer className="blockquote-footer">
-                            <b>{c.author}</b> {new Date(c.date).toLocaleString()}
+                            <b>{c.author}</b> {new Date(c.date).toLocaleString(navigator.language, { year: 'numeric', month: 'short', day: '2-digit' })}
                         </footer>
                     </blockquote>)}
             </> :
