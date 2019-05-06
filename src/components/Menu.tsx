@@ -11,7 +11,7 @@ import { DishDetail } from './DishDetail';
 
 interface IMenuProps {
     dishes: Array<IDish>,
-    selectDish(dishId: number): any
+    selectDish: (dishId: number) => () => void
 }
 
 const Menu: React.FC<IMenuProps> = (props) => {

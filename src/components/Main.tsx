@@ -10,12 +10,12 @@ const Main: React.FC = () => {
     const [dishes] = useState(DISHES);
     const [selectedDish, setSelectedDish] = useState();
 
-    const selectDish = (dishId: number) => {
+    const selectDish = (dishId: number) => () => {
         setSelectedDish(dishes.find(d => d.id === dishId));
     }
 
     return (
-        <>
+        <div>
             <Navbar dark color="primary">
                 <div className="container">
                     <NavbarBrand href="/">Ristorante Con Fusion</NavbarBrand>
@@ -24,7 +24,7 @@ const Main: React.FC = () => {
             <Menu dishes={dishes}
                 selectDish={selectDish} />
             <DishDetail dish={selectedDish} />>
-        </>
+        </div>
     );
 }
 
