@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Card,
     CardImg,
@@ -7,25 +7,20 @@ import {
 } from 'reactstrap';
 
 import { IDish } from '../shared/dishes';
-
 import { DishDetail } from './DishDetail';
 
 interface IMenuProps {
     dishes: Array<IDish>,
+    selectDish(dishId: number): any
 }
 
 const Menu: React.FC<IMenuProps> = (props) => {
+    const { dishes, selectDish } = props;
 
-    const [selectedDish, setSelectedDish] = useState();
-
-    const selectDish = (dish: IDish) => {
-        setSelectedDish(dish);
-    }
-
-    const menu = props.dishes.map((dish) => {
+    const menu = dishes.map((dish) => {
         return (
             <div key={dish.id} className="col-12 col-md-5 m-1">
-                <Card onClick={() => selectDish(dish)}>
+                <Card onClick={selectDish(dish.id)}>
                     <CardImg width="100%" object src={dish.image} alt={dish.name} />
                     <CardImgOverlay>
                         <CardTitle>{dish.name}</CardTitle>
@@ -40,7 +35,6 @@ const Menu: React.FC<IMenuProps> = (props) => {
             <div className="row">
                 {menu}
             </div>
-            <DishDetail dish={selectedDish} />
         </div>
     );
 };
