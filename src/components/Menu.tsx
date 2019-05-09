@@ -5,12 +5,12 @@ import MenuItem from './MenuItem';
 
 interface IMenuProps {
     dishes: Array<IDish>,
-    selectDish: (dishId: number) => () => void
+   // selectDish: (dishId: number) => () => void
 }
 
-const Menu: React.FC<IMenuProps> = ({ dishes, selectDish }) => {
+const Menu: React.FC<IMenuProps> = ({ dishes }) => {
     const menu = useMemo(() => dishes.map((dish: IDish) =>
-        <MenuItem key={dish.id} dish={dish} selectDish={selectDish} />), [dishes, selectDish]);
+        <MenuItem key={dish.id} dish={dish}  />), [dishes]);
 
     return (
         <div className="container">
