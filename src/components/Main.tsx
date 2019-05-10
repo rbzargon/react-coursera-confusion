@@ -4,6 +4,7 @@ import { COMMENTS } from '../shared/comments';
 import { DISHES } from '../shared/dishes';
 import { LEADERS } from '../shared/leaders';
 import { PROMOTIONS } from '../shared/promotions';
+import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
 import Footer from './Footer';
@@ -30,7 +31,7 @@ export const Main: React.FC = () => {
         leaders: LEADERS
     });
 
-    const HomePage: React.SFC = () => {
+    const HomePage: React.SFC<void> = () => {
         return (
             <Home dish={state.dishes.find(d => d.featured)}
                 promotion={state.promotions.find(p => p.featured)}
@@ -45,6 +46,12 @@ export const Main: React.FC = () => {
         );
     };
 
+    const AboutUs: React.SFC<void> = () => {
+        return (
+            <About leaders={state.leaders} />
+        );
+    };
+
     return (
         <div>
             <Header />
@@ -52,7 +59,8 @@ export const Main: React.FC = () => {
                 <Route path='/home' component={HomePage} />
                 <Route exact path='/menu' component={MenuPage} />
                 <Route path='/menu/:dishId' component={DishWithId} />
-                <Route exact path='/contactus' component={Contact} />>
+                <Route exact path='/contactus' component={Contact} />
+                <Route exact path='/aboutus' component={AboutUs} />
                 <Redirect to='/home' />
             </Switch>
             <Footer />
