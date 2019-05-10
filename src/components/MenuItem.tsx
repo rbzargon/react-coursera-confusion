@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
     Card,
     CardImg,
@@ -17,11 +18,13 @@ interface IMenuItemProps {
 export const MenuItem: React.FC<IMenuItemProps> = ({ key, dish }) => {
     return (
         <div key={key} className="col-12 col-md-5 m-1">
-            <Card onClick={() => console.log(`dish ${dish.name} selected`)}>
-                <CardImg width="100%" object src={dish.image} alt={dish.name} />
-                <CardImgOverlay>
-                    <CardTitle>{dish.name}</CardTitle>
-                </CardImgOverlay>
+            <Card>
+                <Link to={`/menu/${dish.id}`} >
+                    <CardImg width="100%" object src={dish.image} alt={dish.name} />
+                    <CardImgOverlay>
+                        <CardTitle>{dish.name}</CardTitle>
+                    </CardImgOverlay>
+                </Link>
             </Card>
         </div>
     );
