@@ -3,7 +3,7 @@ import React from 'react';
 import { IComment } from '../shared/comments';
 
 export interface ICommentsProps {
-    comments: Array<IComment>
+    comments?: Array<IComment>
 }
 
 const Comments: React.FC<ICommentsProps> = React.memo((props) => {
