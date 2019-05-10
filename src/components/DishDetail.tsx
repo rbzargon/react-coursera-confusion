@@ -20,9 +20,6 @@ export const DishDetail: React.FC<IDishDetailProps> = React.memo((props) => {
                     <div className="col-12 col-md-5 m-1">
                         <DishCard dish={dish} />>
                     </div>
-                    <div className="col-12 col-md-5 m-1">
-                        <Comments comments={dish.comments} />
-                    </div>
                 </div>
             </div> :
             <div></div>
