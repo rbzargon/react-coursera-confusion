@@ -1,5 +1,6 @@
 export interface IComment {
     id: number,
+    dishId: number,
     rating: number,
     comment: string,
     author: string,
