@@ -42,7 +42,7 @@ export const Header: React.FC<IHeaderProps> = (props) => {
                             </NavItem>
                             <NavItem>
                                 <NavLink className="nav-link" to="/contactus">
-                                    <i className="fa fa-address0card fa-lg" /> Contact Us
+                                    <i className="fa fa-address-card fa-lg" /> Contact Us
                             </NavLink>
                             </NavItem>
                         </Nav>
