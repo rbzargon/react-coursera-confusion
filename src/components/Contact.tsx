@@ -1,5 +1,5 @@
-import React from 'react';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import React, { useState } from 'react';
+import { Breadcrumb, BreadcrumbItem, Form, FormGroup, Label, Col, Input, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 interface IContactProps {
@@ -7,6 +7,29 @@ interface IContactProps {
 }
 
 export const Contact: React.FC<IContactProps> = (props) => {
+
+    const [state, setState] = useState({
+        firstname: '',
+        lastname: '',
+        telnum: '',
+        email: '',
+        agree: false,
+        contactType: 'Tel.',
+        message: ''
+    });
+
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        const et = e.target;
+        et.type === 'checkbox' ? setState({ ...state, agree: !state.agree }) :
+            setState({ ...state, [et.id]: et.value })
+    };
+
+    const handleSubmit: React.FormEventHandler<HTMLElement> = (e) => {
+        e.preventDefault()
+        console.log(`Current state: ${state}`);
+        alert(`Current state: ${JSON.stringify(state)}`);
+    }
+
     return (
         <div className="container">
             <div className="row">
@@ -47,6 +70,70 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <a role="button" className="btn btn-info"><i className="fa fa-skype"></i> Skype</a>
                         <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
                     </div>
+                </div>
+            </div>
+            <div className="row row-content">
+                <div className="col-12">
+                    <h3>Send us Your Feedback</h3>
+                </div>
+                <div className="col-12 col-md-9">
+                    <Form onSubmit={handleSubmit}>
+                        <FormGroup row>
+                            <Label htmlFor="firstname" md={2}>First Name</Label>
+                            <Col md={10}>
+                                <Input type="text" id="firstname" name="firstname" placeholder="First Name" value={state.firstname} onChange={handleChange} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="lastname" md={2}>Last Name</Label>
+                            <Col md={10}>
+                                <Input type="text" id="lastname" name="lastname" placeholder="Last Name"
+                                    value={state.lastname} onChange={handleChange} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="telnum" md={2}>Telephone</Label>
+                            <Col md={10}>
+                                <Input type="text" id="telnum" name="telnum" placeholder="Tel. Number"
+                                    value={state.telnum} onChange={handleChange} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="email" md={2}>Email</Label>
+                            <Col md={10}>
+                                <Input type="text" id="email" name="email" placeholder="Email" value={state.email} onChange={handleChange} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{ size: 6, offset: 2 }}>
+                                <FormGroup check >
+                                    <Label check>
+                                        <Input type="checkbox" name="agree" checked={state.agree} onChange={handleChange} />
+                                        {' '}<strong>May we contact you?</strong>
+                                    </Label>
+                                </FormGroup>
+                            </Col>
+                            <Col md={{ size: 3, offset: 1 }}>
+                                <Input type="select" name="contactType" value={state.contactType} onChange={handleChange} >
+                                    <option>Tel.</option>
+                                    <option>Email</option>
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label htmlFor="feedback" md={2}>Your Feedback</Label>
+                            <Col md={10}>
+                                <Input type="textarea" id="message" name="message" placeholder="Feedback" rows={12} value={state.message} onChange={handleChange} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{ size: 10, offset: 2 }} >
+                                <Button type="submit" color="primary">
+                                    Send Feedback
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                    </Form>
                 </div>
             </div>
         </div>
