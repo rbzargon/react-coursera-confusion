@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Breadcrumb, BreadcrumbItem, Form, FormGroup, Label, Col, Input, Button } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Form, FormGroup, Label, Col, Input, Button, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 interface IContactProps {
@@ -15,10 +15,22 @@ export const Contact: React.FC<IContactProps> = (props) => {
         email: '',
         agree: false,
         contactType: 'Tel.',
-        message: ''
+        message: '',
+        touched: {
+            firstname: false,
+            lastname: false,
+            telnum: false,
+            email: false
+        }
     });
 
+    const handleBlur: React.ChangeEventHandler<HTMLInputElement> =  (event) => {
+        console.log('handleBlur',event);
+        setState({ ...state, touched: { ...state.touched, [event.target.id]: true } });
+    };
+
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        console.log(e);
         const et = e.target;
         et.type === 'checkbox' ? setState({ ...state, agree: !state.agree }) :
             setState({ ...state, [et.id]: et.value })
@@ -29,6 +41,35 @@ export const Contact: React.FC<IContactProps> = (props) => {
         console.log(`Current state: ${state}`);
         alert(`Current state: ${JSON.stringify(state)}`);
     }
+
+    const validate = (firstname: string, lastname: string, telnum: string, email: string) => {
+        const errors = {
+            firstname: '',
+            lastname: '',
+            telnum: '',
+            email: '',
+        }
+        if (state.touched.firstname && state.firstname.length < 3)
+            errors.firstname = 'First name should be >= 3 characters';
+        else if (state.touched.firstname && state.firstname.length > 10)
+            errors.firstname = 'First name should be <= 10 characters';
+
+        if (state.touched.lastname && state.lastname.length < 3)
+            errors.lastname = 'Last name should be >= 3 characters';
+        else if (state.touched.lastname && state.lastname.length > 10)
+            errors.lastname = 'Last name should be <= 10 characters';
+
+        const reg = /^\d+$/;
+        if (state.touched.telnum && !reg.test(state.telnum))
+            errors.telnum = "Only digits allowed";
+
+        if (state.touched.email && email.indexOf('@') === -1)
+            errors.email = "Email should contain @"
+
+        return errors;
+    }
+
+    const errors = validate(state.firstname, state.lastname, state.telnum, state.email);
 
     return (
         <div className="container">
@@ -81,27 +122,61 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <FormGroup row>
                             <Label htmlFor="firstname" md={2}>First Name</Label>
                             <Col md={10}>
-                                <Input type="text" id="firstname" name="firstname" placeholder="First Name" value={state.firstname} onChange={handleChange} />
+                                <Input type="text" id="firstname" name="firstname" 
+                                placeholder="First Name" 
+                                valid={state.touched.firstname && !(errors.firstname)}
+                                invalid={!!(errors.firstname)}
+                                value={state.firstname} 
+                                onChange={handleChange} 
+                                onBlur={handleBlur} />
+                                <FormFeedback>
+                                    {errors.firstname}
+                                </FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor="lastname" md={2}>Last Name</Label>
                             <Col md={10}>
-                                <Input type="text" id="lastname" name="lastname" placeholder="Last Name"
-                                    value={state.lastname} onChange={handleChange} />
+                                <Input type="text" id="lastname" name="lastname" 
+                                    placeholder="Last Name"
+                                    valid={state.touched.lastname && !(errors.lastname)}
+                                    invalid={!!(errors.lastname)}
+                                    value={state.lastname} 
+                                    onChange={handleChange} 
+                                    onBlur={handleBlur}/>
+                                <FormFeedback>
+                                    {errors.lastname}
+                                </FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor="telnum" md={2}>Telephone</Label>
                             <Col md={10}>
-                                <Input type="text" id="telnum" name="telnum" placeholder="Tel. Number"
-                                    value={state.telnum} onChange={handleChange} />
+                                <Input type="text" id="telnum" name="telnum" 
+                                    placeholder="Tel. Number"
+                                    valid={state.touched.telnum && !(errors.telnum)}
+                                    invalid={!!(errors.telnum)}
+                                    value={state.telnum} 
+                                    onChange={handleChange} 
+                                    onBlur={handleBlur}/>
+                                <FormFeedback>
+                                    {errors.telnum}
+                                </FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor="email" md={2}>Email</Label>
                             <Col md={10}>
-                                <Input type="text" id="email" name="email" placeholder="Email" value={state.email} onChange={handleChange} />
+                                <Input type="text" id="email" name="email" 
+                                placeholder="Email" 
+                                valid={state.touched.email && !(errors.email)}
+                                invalid={!!(errors.email)}
+                                value={state.email} 
+                                onChange={handleChange} 
+                                onBlur={handleBlur}/>
+                                <FormFeedback>
+                                    {errors.email}
+                                </FormFeedback>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
