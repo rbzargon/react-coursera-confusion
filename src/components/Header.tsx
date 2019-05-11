@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { Collapse, Navbar, NavbarBrand, Nav, NavbarToggler, NavItem, Jumbotron } from 'reactstrap';
+import React, { useCallback, useState, useRef } from 'react';
+import { Collapse, Navbar, NavbarBrand, Nav, NavbarToggler, NavItem, Jumbotron, Modal, ModalHeader, ModalBody, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 interface IHeaderProps {
@@ -9,10 +9,25 @@ interface IHeaderProps {
 export const Header: React.FC<IHeaderProps> = (props) => {
 
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    let username = React.createRef<HTMLInputElement>();
+    let password = React.createRef<HTMLInputElement>();
+    let remember = React.createRef<HTMLInputElement>();
 
     const toggleNavbar = useCallback(() => {
         setIsNavOpen(!isNavOpen);
     }, [isNavOpen]);
+
+    const toggleLogin = useCallback(() => {
+        setIsLoginOpen(!isLoginOpen);
+    }, [isLoginOpen]);
+
+    const handleLogin: React.FormEventHandler<HTMLFormElement> = (event) => {
+        toggleLogin();
+        if (username.current && password.current && remember.current)
+            alert(`Username: ${username.current.value} password: ${password.current.value}} remember: ${remember.current.checked}}`);
+        event.preventDefault();
+    }
 
     return (
         <>
@@ -43,7 +58,14 @@ export const Header: React.FC<IHeaderProps> = (props) => {
                             <NavItem>
                                 <NavLink className="nav-link" to="/contactus">
                                     <i className="fa fa-address-card fa-lg" /> Contact Us
-                            </NavLink>
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <Button outline onClick={toggleLogin}>
+                                    <i className="fa fa-sign-in fa-lg" /> Login
+                                </Button>
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -59,6 +81,35 @@ export const Header: React.FC<IHeaderProps> = (props) => {
                     </div>
                 </div>
             </Jumbotron>
+            <Modal isOpen={isLoginOpen} toggle={toggleLogin}>
+                <ModalHeader>Login</ModalHeader>
+                <ModalBody>
+                    <Form onSubmit={handleLogin}>
+                        <FormGroup>
+                            <Label htmlFor="username">
+                                Username
+                            </Label>
+                            <Input type="text" id="username" name="username"
+                                innerRef={username} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label htmlFor="password">
+                                Password
+                            </Label>
+                            <Input type="password" id="password" name="password"
+                                innerRef={password} />
+                        </FormGroup>
+                        <FormGroup check>
+                            <Label check>
+                                <Input type="checkbox" name="remember"
+                                    innerRef={remember} />
+                                Remember me
+                            </Label>
+                        </FormGroup>
+                        <Button type="submit" value="submit" color="bg-primary">Login</Button>
+                    </Form>
+                </ModalBody>
+            </Modal>
         </>
     );
 };
