@@ -24,8 +24,8 @@ export const Contact: React.FC<IContactProps> = (props) => {
         }
     });
 
-    const handleBlur: React.ChangeEventHandler<HTMLInputElement> =  (event) => {
-        console.log('handleBlur',event);
+    const handleBlur: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        console.log('handleBlur', event);
         setState({ ...state, touched: { ...state.touched, [event.target.id]: true } });
     };
 
@@ -108,7 +108,7 @@ export const Contact: React.FC<IContactProps> = (props) => {
                 <div className="col-12 col-sm-11 offset-sm-1">
                     <div className="btn-group" role="group">
                         <a role="button" className="btn btn-primary" href="tel:+85212345678"><i className="fa fa-phone"></i> Call</a>
-                        <a role="button" className="btn btn-info"><i className="fa fa-skype"></i> Skype</a>
+                        <a role="button" className="btn btn-info" href="https://www.skype.com"><i className="fa fa-skype"></i> Skype</a>
                         <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
                     </div>
                 </div>
@@ -122,13 +122,13 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <FormGroup row>
                             <Label htmlFor="firstname" md={2}>First Name</Label>
                             <Col md={10}>
-                                <Input type="text" id="firstname" name="firstname" 
-                                placeholder="First Name" 
-                                valid={state.touched.firstname && !(errors.firstname)}
-                                invalid={!!(errors.firstname)}
-                                value={state.firstname} 
-                                onChange={handleChange} 
-                                onBlur={handleBlur} />
+                                <Input type="text" id="firstname" name="firstname"
+                                    placeholder="First Name"
+                                    valid={state.touched.firstname && !(errors.firstname)}
+                                    invalid={!!(errors.firstname)}
+                                    value={state.firstname}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur} />
                                 <FormFeedback>
                                     {errors.firstname}
                                 </FormFeedback>
@@ -137,13 +137,13 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <FormGroup row>
                             <Label htmlFor="lastname" md={2}>Last Name</Label>
                             <Col md={10}>
-                                <Input type="text" id="lastname" name="lastname" 
+                                <Input type="text" id="lastname" name="lastname"
                                     placeholder="Last Name"
                                     valid={state.touched.lastname && !(errors.lastname)}
                                     invalid={!!(errors.lastname)}
-                                    value={state.lastname} 
-                                    onChange={handleChange} 
-                                    onBlur={handleBlur}/>
+                                    value={state.lastname}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur} />
                                 <FormFeedback>
                                     {errors.lastname}
                                 </FormFeedback>
@@ -152,13 +152,13 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <FormGroup row>
                             <Label htmlFor="telnum" md={2}>Telephone</Label>
                             <Col md={10}>
-                                <Input type="text" id="telnum" name="telnum" 
+                                <Input type="text" id="telnum" name="telnum"
                                     placeholder="Tel. Number"
                                     valid={state.touched.telnum && !(errors.telnum)}
                                     invalid={!!(errors.telnum)}
-                                    value={state.telnum} 
-                                    onChange={handleChange} 
-                                    onBlur={handleBlur}/>
+                                    value={state.telnum}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur} />
                                 <FormFeedback>
                                     {errors.telnum}
                                 </FormFeedback>
@@ -167,13 +167,13 @@ export const Contact: React.FC<IContactProps> = (props) => {
                         <FormGroup row>
                             <Label htmlFor="email" md={2}>Email</Label>
                             <Col md={10}>
-                                <Input type="text" id="email" name="email" 
-                                placeholder="Email" 
-                                valid={state.touched.email && !(errors.email)}
-                                invalid={!!(errors.email)}
-                                value={state.email} 
-                                onChange={handleChange} 
-                                onBlur={handleBlur}/>
+                                <Input type="text" id="email" name="email"
+                                    placeholder="Email"
+                                    valid={state.touched.email && !(errors.email)}
+                                    invalid={!!(errors.email)}
+                                    value={state.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur} />
                                 <FormFeedback>
                                     {errors.email}
                                 </FormFeedback>
