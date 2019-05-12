@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { COMMENTS } from '../shared/comments';
-import { DISHES } from '../shared/dishes';
-import { LEADERS } from '../shared/leaders';
-import { PROMOTIONS } from '../shared/promotions';
+import React from 'react';
+import { connect } from "react-redux";
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { RootState } from '../redux/reducer';
+import { IComment } from '../shared/comments';
+import { IDish } from '../shared/dishes';
+import { ILeader } from '../shared/leaders';
+import { IPromotion } from '../shared/promotions';
 import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
@@ -11,6 +13,24 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
+
+
+
+type StateProps = {
+    dishes: IDish[],
+    comments: IComment[],
+    promotions: IPromotion[],
+    leaders: ILeader[]
+}
+
+const mapStateToProps = (state: RootState) => {
+    return {
+        dishes: state.dishes,
+        comments: state.comments,
+        promotions: state.promotions,
+        leaders: state.leaders,
+    }
+}
 
 interface IDishWithIdProps {
     match: {
@@ -20,35 +40,29 @@ interface IDishWithIdProps {
     }
 }
 
-const MenuPage = React.memo(() => <Menu dishes={DISHES} />);
 
-export const Main: React.FC = () => {
-
-    const [state] = useState({
-        dishes: DISHES,
-        comments: COMMENTS,
-        promotions: PROMOTIONS,
-        leaders: LEADERS
-    });
+export const Main: React.SFC<StateProps & RouteComponentProps> = (props) => {
 
     const HomePage: React.SFC<void> = () => {
         return (
-            <Home dish={state.dishes.find(d => d.featured)}
-                promotion={state.promotions.find(p => p.featured)}
-                leader={state.leaders.find(l => l.featured)} />
+            <Home dish={props.dishes.find(d => d.featured)}
+                promotion={props.promotions.find(p => p.featured)}
+                leader={props.leaders.find(l => l.featured)} />
         );
     };
 
+    const MenuPage = React.memo(() => <Menu dishes={props.dishes} />);
+
     const DishWithId: React.SFC<IDishWithIdProps> = ({ match: { params: { dishId } } }) => {
         return (
-            <DishDetail dish={state.dishes.find(d => d.id === parseInt(dishId))}
-                comments={state.comments.filter(c => c.dishId === parseInt(dishId))} />
+            <DishDetail dish={props.dishes.find(d => d.id === parseInt(dishId))}
+                comments={props.comments.filter(c => c.dishId === parseInt(dishId))} />
         );
     };
 
     const AboutUs: React.SFC<void> = () => {
         return (
-            <About leaders={state.leaders} />
+            <About leaders={props.leaders} />
         );
     };
 
@@ -68,4 +82,4 @@ export const Main: React.FC = () => {
     );
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
