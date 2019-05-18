@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { IComment } from '../shared/comments';
+import { CommentForm } from './CommentForm';
+import { Button } from 'reactstrap';
 
 export interface ICommentsProps {
     comments?: Array<IComment>
@@ -9,7 +11,8 @@ export interface ICommentsProps {
 const Comments: React.FC<ICommentsProps> = React.memo((props) => {
 
     const { comments } = props;
-    console.log('rerendered comments');
+    const [isFormOpen, setFormOpen] = useState(false);
+
     return (
         !!comments ? //null check
             <>
@@ -20,6 +23,8 @@ const Comments: React.FC<ICommentsProps> = React.memo((props) => {
                             <b>{c.author}</b> {new Date(c.date).toLocaleString(navigator.language, { year: 'numeric', month: 'short', day: '2-digit' })}
                         </footer>
                     </blockquote>)}
+                <Button onClick={() => setFormOpen(true)} type="button" className="btn btn-light"><i className="fa fa-pencil"></i>{' '}Submit Comment</Button>
+                <CommentForm isOpen={isFormOpen} toggle={() => { setFormOpen(false); }} />
             </> :
             <div></div>
     );
