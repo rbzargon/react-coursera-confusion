@@ -6,10 +6,10 @@ import {
     CardText,
     CardTitle
 } from 'reactstrap';
-import { IDish } from '../shared/dishes';
+import { Dish } from '../shared/dishes';
 
 interface IDishCardProps {
-    dish: IDish
+    dish: Dish
 }
 
 export const DishCard: React.FC<IDishCardProps> = ({ dish: { description, image, name } }) => {
