@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Control, Errors, LocalForm } from "react-redux-form";
 import { Button, Col, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
+import { AddCommentContext } from '../context/addComment';
 
 interface CommentFormProps {
     isOpen: boolean,
     toggle: () => void
 };
 
+interface ModelValues {
+    author: string,
+    comment: string,
+    rating: number,
+}
+
 
 const maxLength = (len: number) => ({ length } = '') => (length <= len);
 const minLength = (len: number) => ({ length } = '') => (length >= len);
 
 export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ isOpen, toggle }) => {
+
+    const { addComment, dishId } = useContext(AddCommentContext);
+
+    const submitHandler = (values: any) => {
+        console.log(values);
+        toggle();
+        const { author, comment, rating } = values;
+        addComment({
+            author, comment, dishId, rating,
+        });
+    };
+
     return (
         <Modal isOpen={isOpen} >
             <ModalHeader toggle={toggle}>Submit Comment</ModalHeader>
@@ -62,7 +81,7 @@ export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ isOpen,
                 </LocalForm>
             </ModalBody>
             <ModalFooter>
-                <Button type="submit" color="primary" onClick={toggle}>Submit</Button>
+                <Button type="submit" color="primary" onClick={submitHandler}>Submit</Button>
             </ModalFooter>
         </Modal>
     );
