@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, Store, AnyAction } from 'redux';
 import { Comment } from '../shared/comments';
 import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
@@ -16,7 +16,7 @@ export interface RootState {
 }
 
 export const configureStore = () => {
-    const store: RootState = createStore(
+    const store: Store<RootState, AnyAction> = createStore(
         combineReducers({
             comments: Comments,
             dishes: Dishes,
