@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import { IComment } from '../shared/comments';
+import { Comment } from '../shared/comments';
 import { CommentForm } from './CommentForm';
 import { Button } from 'reactstrap';
 
 export interface ICommentsProps {
-    comments?: Array<IComment>
+    comments?: Array<Comment>
 }
 
 const Comments: React.FC<ICommentsProps> = React.memo((props) => {
