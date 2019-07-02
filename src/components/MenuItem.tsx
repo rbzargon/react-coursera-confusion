@@ -7,11 +7,11 @@ import {
     CardTitle
 } from 'reactstrap';
 
-import { IDish } from '../shared/dishes';
+import { Dish } from '../shared/dishes';
 
 interface IMenuItemProps {
     key: number,
-    dish: IDish,
+    dish: Dish,
 
 }
 
