@@ -1,15 +1,15 @@
 import React from 'react';
-
-import { IDish } from '../shared/dishes';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Comment } from '../shared/comments';
+import { Dish } from '../shared/dishes';
 import Comments from './Comments';
 import DishCard from './DishCard';
-import { IComment } from '../shared/comments';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
+
 
 export interface IDishDetailProps {
-    dish?: IDish,
-    comments?: IComment[]
+    dish?: Dish,
+    comments?: Comment[]
 }
 
 export const DishDetail: React.FC<IDishDetailProps> = React.memo((props) => {
