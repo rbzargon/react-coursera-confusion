@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Control, Errors, LocalForm, actions } from "react-redux-form";
+import { Control, Errors, LocalForm } from "react-redux-form";
 import { Button, Col, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { AddCommentContext } from '../context/addComment';
 
