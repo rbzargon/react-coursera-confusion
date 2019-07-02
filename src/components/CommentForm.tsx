@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Control, Errors, LocalForm } from "react-redux-form";
+import { Control, Errors, LocalForm, actions } from "react-redux-form";
 import { Button, Col, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { AddCommentContext } from '../context/addComment';
 
@@ -22,30 +22,41 @@ export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ isOpen,
 
     const { addComment, dishId } = useContext(AddCommentContext);
 
-    const submitHandler = (values: any) => {
-        console.log(values);
+    const handleUpdate = (form: any) => {
+        console.log('update', form);
+    };
+
+    const handleChange = (values: any) => {
+        console.log('change', values);
+    }
+
+    const handleSubmit = (values: any) => {
+        console.log('submit', values);
         toggle();
         const { author, comment, rating } = values;
         addComment({
             author, comment, dishId, rating,
         });
-    };
+    }
 
     return (
         <Modal isOpen={isOpen} >
             <ModalHeader toggle={toggle}>Submit Comment</ModalHeader>
-            <ModalBody>
-                <LocalForm>
+            <LocalForm
+                onUpdate={(form) => handleUpdate(form)}
+                onChange={(values) => handleChange(values)}
+                onSubmit={(values) => handleSubmit(values)}
+            >
+                <ModalBody>
                     <Row className="form-group">
                         <Label htmlFor="rating" md={12}>Rating</Label>
                         <Col md={12}>
                             <Control.text model=".rating" id="rating" name="rating"
                                 className="form-control"
                                 type="number"
-                                min={0}
+                                parser={v => parseInt(v) || 1}
+                                min={1}
                                 max={5}
-                                step={1}
-                                value={1}
                             />
                         </Col>
                     </Row>
@@ -78,11 +89,11 @@ export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ isOpen,
                             />
                         </Col>
                     </Row>
-                </LocalForm>
-            </ModalBody>
-            <ModalFooter>
-                <Button type="submit" color="primary" onClick={submitHandler}>Submit</Button>
-            </ModalFooter>
+                </ModalBody>
+                <ModalFooter>
+                    <Button type="submit" color="primary">Submit</Button>
+                </ModalFooter>
+            </LocalForm>
         </Modal>
     );
 }
