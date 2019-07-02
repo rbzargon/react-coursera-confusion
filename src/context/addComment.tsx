@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { CommentEntry } from '../redux/actionCreator';
 
-const AddCommentContext = React.createContext({
-    addComment: (entry: CommentEntry) => { },
-    dishId: -1
-});
+const AddCommentContext = React.createContext((entry: CommentEntry) => { });
 
 interface AddCommentProviderProps {
-    addComment: (entry: CommentEntry) => void,
-    dishId: number
-    children: React.ReactNode
+    value: (entry: CommentEntry) => void,
+    children: ReactNode
 }
 
 const AddCommentProvider = (props: AddCommentProviderProps) => {
-    const { addComment, dishId, children } = props;
+    const { value, children } = props;
 
     return (
-        <AddCommentContext.Provider value={{ addComment, dishId }}>
+        <AddCommentContext.Provider value={value}>
             {children}
         </AddCommentContext.Provider>
     );

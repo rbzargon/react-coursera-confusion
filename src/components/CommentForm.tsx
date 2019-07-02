@@ -4,6 +4,7 @@ import { Button, Col, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } f
 import { AddCommentContext } from '../context/addComment';
 
 interface CommentFormProps {
+    dishId: number,
     isOpen: boolean,
     toggle: () => void
 };
@@ -14,13 +15,12 @@ interface ModelValues {
     rating: number,
 }
 
-
 const maxLength = (len: number) => ({ length } = '') => (length <= len);
 const minLength = (len: number) => ({ length } = '') => (length >= len);
 
-export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ isOpen, toggle }) => {
+export const CommentForm: React.FunctionComponent<CommentFormProps> = ({ dishId, isOpen, toggle }) => {
 
-    const { addComment, dishId } = useContext(AddCommentContext);
+    const addComment = useContext(AddCommentContext);
 
     const handleUpdate = (form: any) => {
         console.log('update', form);

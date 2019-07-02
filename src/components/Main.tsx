@@ -35,7 +35,7 @@ interface IDishWithIdProps {
 
 
 export const Main: React.SFC<RootState & DispatchFromProps & RouteComponentProps> = (props) => {
-
+    console.log(props.comments);
     const HomePage: React.SFC<void> = () => {
         return (
             <Home dish={props.dishes.find(d => d.featured)}
@@ -48,7 +48,7 @@ export const Main: React.SFC<RootState & DispatchFromProps & RouteComponentProps
 
     const DishWithId: React.SFC<IDishWithIdProps> = ({ match: { params: { dishId } } }) => {
         return (
-            <AddCommentProvider addComment={props.addComment} dishId={props.dishes.length}>
+            <AddCommentProvider value={props.addComment}>
                 <DishDetail dish={props.dishes.find(d => d.id === parseInt(dishId))}
                     comments={props.comments.filter(c => c.dishId === parseInt(dishId))} />
             </AddCommentProvider>
