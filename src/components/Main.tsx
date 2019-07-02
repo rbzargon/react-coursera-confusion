@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-import { RootState } from '../redux/reducer';
-import { IComment } from '../shared/comments';
-import { IDish } from '../shared/dishes';
-import { ILeader } from '../shared/leaders';
-import { IPromotion } from '../shared/promotions';
+import { Dispatch } from 'redux';
+import { AddCommentProvider } from '../context/addComment';
+import { addComment, CommentEntry } from '../redux/actionCreator';
+import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
@@ -14,23 +13,17 @@ import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
 
-
-
-type StateProps = {
-    dishes: IDish[],
-    comments: IComment[],
-    promotions: IPromotion[],
-    leaders: ILeader[]
-}
-
 const mapStateToProps = (state: RootState) => {
-    return {
-        dishes: state.dishes,
-        comments: state.comments,
-        promotions: state.promotions,
-        leaders: state.leaders,
-    }
+    return state;
 }
+
+interface DispatchFromProps {
+    addComment: (entry: CommentEntry) => void,
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    addComment: (entry: CommentEntry) => dispatch(addComment(entry))
+});
 
 interface IDishWithIdProps {
     match: {
@@ -41,7 +34,7 @@ interface IDishWithIdProps {
 }
 
 
-export const Main: React.SFC<StateProps & RouteComponentProps> = (props) => {
+export const Main: React.SFC<RootState & DispatchFromProps & RouteComponentProps> = (props) => {
 
     const HomePage: React.SFC<void> = () => {
         return (
@@ -55,8 +48,10 @@ export const Main: React.SFC<StateProps & RouteComponentProps> = (props) => {
 
     const DishWithId: React.SFC<IDishWithIdProps> = ({ match: { params: { dishId } } }) => {
         return (
-            <DishDetail dish={props.dishes.find(d => d.id === parseInt(dishId))}
-                comments={props.comments.filter(c => c.dishId === parseInt(dishId))} />
+            <AddCommentProvider addComment={props.addComment} dishId={props.dishes.length}>
+                <DishDetail dish={props.dishes.find(d => d.id === parseInt(dishId))}
+                    comments={props.comments.filter(c => c.dishId === parseInt(dishId))} />
+            </AddCommentProvider>
         );
     };
 
@@ -82,4 +77,4 @@ export const Main: React.SFC<StateProps & RouteComponentProps> = (props) => {
     );
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect<RootState, DispatchFromProps, {}, RootState>(mapStateToProps, mapDispatchToProps)(Main));
