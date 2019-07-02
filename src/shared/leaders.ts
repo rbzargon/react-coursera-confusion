@@ -1,4 +1,4 @@
-export interface ILeader {
+export interface Leader {
   id: Number,
   name: string,
   image: string,
@@ -8,7 +8,7 @@ export interface ILeader {
   description: string,
 }
 
-export const LEADERS: Array<ILeader> = [
+export const LEADERS: Array<Leader> = [
   {
     id: 0,
     name: 'Peter Pan',

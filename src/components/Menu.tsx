@@ -4,16 +4,16 @@ import {
     BreadcrumbItem,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { IDish } from '../shared/dishes';
+import { Dish } from '../shared/dishes';
 import MenuItem from './MenuItem';
 
 interface IMenuProps {
-    dishes: Array<IDish>,
+    dishes: Array<Dish>,
     // selectDish: (dishId: number) => () => void
 }
 
 const Menu: React.FC<IMenuProps> = ({ dishes }) => {
-    const menu = useMemo(() => dishes.map((dish: IDish) =>
+    const menu = useMemo(() => dishes.map((dish: Dish) =>
         <MenuItem key={dish.id} dish={dish} />), [dishes]);
 
     return (

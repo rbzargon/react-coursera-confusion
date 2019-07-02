@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { ILeader } from '../shared/leaders';
+import { Leader as ILeader } from '../shared/leaders';
 import Leader from './Leader';
 
 interface IAboutProps {

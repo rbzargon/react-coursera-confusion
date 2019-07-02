@@ -1,14 +1,14 @@
 import React from 'react';
 
 import FeatureCard from './FeatureCard';
-import { IDish } from '../shared/dishes';
-import { IPromotion } from '../shared/promotions';
-import { ILeader } from '../shared/leaders';
+import { Dish } from '../shared/dishes';
+import { Promotion } from '../shared/promotions';
+import { Leader } from '../shared/leaders';
 
 interface IHomeProps {
-    dish?: IDish,
-    promotion?: IPromotion,
-    leader?: ILeader,
+    dish?: Dish,
+    promotion?: Promotion,
+    leader?: Leader,
 }
 
 

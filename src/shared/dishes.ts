@@ -1,4 +1,4 @@
-export interface IDish {
+export interface Dish {
     id: number,
     name: string,
     image: string,

@@ -1,12 +1,12 @@
 import React from 'react';
-import { ILeader } from '../shared/leaders';
+import { Leader as ILeader } from '../shared/leaders';
 import { Media } from 'reactstrap';
 
-interface ILeaderProps {
+interface LeaderProps {
     leader: ILeader
 }
 
-export const Leader: React.SFC<ILeaderProps> = ({ leader }) => {
+export const Leader: React.SFC<LeaderProps> = ({ leader }) => {
     return (
         <Media className="mt-5">
             <Media left>

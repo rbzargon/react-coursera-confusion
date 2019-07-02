@@ -1,4 +1,4 @@
-export interface IPromotion {
+export interface Promotion {
   id: number,
   name: string,
   image: string,
@@ -8,7 +8,7 @@ export interface IPromotion {
   description: string
 }
 
-export const PROMOTIONS: Array<IPromotion> = [
+export const PROMOTIONS: Array<Promotion> = [
   {
     id: 0,
     name: 'Weekend Grand Buffet',
