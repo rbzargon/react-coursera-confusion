@@ -6,13 +6,13 @@ import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
 import { Comments } from "./comments";
-import { Dishes } from "./dishes";
+import { Dishes, DishesState, DishesAction } from "./dishes";
 import { Leaders } from './leaders';
 import { Promotions } from "./promotions";
 
 export interface RootState {
     comments: Comment[],
-    dishes: Dish[],
+    dishes: DishesState,
     promotions: Promotion[],
     leaders: Leader[]
 }

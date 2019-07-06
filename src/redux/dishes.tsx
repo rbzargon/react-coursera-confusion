@@ -1,7 +1,8 @@
 import { Dish } from "../shared/dishes";
 import { ACTION_TYPE } from "./actionType";
+import { AnyAction, Reducer, Action } from "redux";
 
-interface DishesState {
+export interface DishesState {
     dishes: Dish[]
     errorMessage: string,
     isLoading: boolean,
@@ -13,12 +14,13 @@ interface OptionalDishesState {
     isLoading?: boolean,
 }
 
-interface DishesAction {
+export interface DishesAction extends Action {
     type: string,
     payload: OptionalDishesState
 }
 
-export const Dishes = (state: DishesState, action: DishesAction): DishesState => {
+export const Dishes: Reducer<DishesState, DishesAction> = (state: DishesState, action: DishesAction) => {
+
     const { payload = {
         dishes: [],
         errorMessage: '',
@@ -49,5 +51,4 @@ export const Dishes = (state: DishesState, action: DishesAction): DishesState =>
             };
         default:
             return state;
-    }
-};
+    };
