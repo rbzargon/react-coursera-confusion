@@ -1,6 +1,6 @@
-import { ACTION_TYPE } from './actionType';
-import { DISHES, Dish } from '../shared/dishes';
 import { Dispatch } from 'redux';
+import { Dish, DISHES } from '../shared/dishes';
+import { ACTION_TYPE } from './actionType';
 import { DishesActionTypes } from './dishes';
 
 export interface CommentEntry {
@@ -29,7 +29,7 @@ export const dishesLoading = (): DishesActionTypes => ({
     type: ACTION_TYPE.DISHES_LOADING,
 });
 
-export const fetchDishes = (): Function => (dispatch: Dispatch): void => {
+export const fetchDishes = () => (dispatch: Dispatch) => {
     dispatch(dishesLoading());
 
     setTimeout((): void => {

@@ -1,6 +1,6 @@
 import { AnyAction, applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import logger from 'redux-logger';
-import thunk from 'redux-thunk';
+import thunk, { ThunkMiddleware, ThunkDispatch } from 'redux-thunk';
 import { Comment } from '../shared/comments';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
@@ -24,7 +24,8 @@ export const configureStore = (): Store<RootState, AnyAction> => {
             promotions: Promotions,
             leaders: Leaders,
         }),
-        applyMiddleware(thunk, logger),
+        applyMiddleware(thunk as ThunkMiddleware<RootState, AnyAction>, logger),
     );
+    store.dispatch = store.dispatch as ThunkDispatch<Store, void, AnyAction>;
     return store;
 };
