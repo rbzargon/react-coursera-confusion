@@ -1,31 +1,30 @@
-import { applyMiddleware, combineReducers, createStore, Store, AnyAction } from 'redux';
-import thunk from 'redux-thunk';
+import { AnyAction, applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import logger from 'redux-logger';
-import { Comment } from '../shared/comments';
-import { Dish } from '../shared/dishes';
+import thunk from 'redux-thunk';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
-import { Comments } from "./comments";
-import { Dishes, DishesState, DishesAction } from "./dishes";
+import { CommentEntry } from './actionCreator';
+import { Comments } from './comments';
+import { dishesReducer, DishesState } from './dishes';
 import { Leaders } from './leaders';
-import { Promotions } from "./promotions";
+import { Promotions } from './promotions';
 
 export interface RootState {
-    comments: Comment[],
-    dishes: DishesState,
-    promotions: Promotion[],
-    leaders: Leader[]
+    comments: CommentEntry[];
+    dishes: DishesState;
+    promotions: Promotion[];
+    leaders: Leader[];
 }
 
-export const configureStore = () => {
+export const configureStore = (): Store<RootState, AnyAction> => {
     const store: Store<RootState, AnyAction> = createStore(
         combineReducers({
             comments: Comments,
-            dishes: Dishes,
+            dishes: dishesReducer,
             promotions: Promotions,
             leaders: Leaders,
         }),
-        applyMiddleware(thunk, logger)
+        applyMiddleware(thunk, logger),
     );
     return store;
 };
