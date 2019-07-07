@@ -40,7 +40,7 @@ export type DishesActionTypes = AddDishesAction | AddCommentAction | DishesFaile
 
 export const dishesReducer = (state: DishesState = initialDishesState, action: DishesActionTypes): DishesState => {
     switch (action.type) {
-        case ACTION_TYPE.ADD_DISHES:
+        case ACTION_TYPE.ADD_DISHES: {
             const {
                 payload: { dishes },
             } = action as AddDishesAction;
@@ -51,7 +51,8 @@ export const dishesReducer = (state: DishesState = initialDishesState, action: D
                 errorMessage: '',
                 isLoading: true,
             };
-        case ACTION_TYPE.DISHES_FAILED:
+        }
+        case ACTION_TYPE.DISHES_FAILED: {
             const {
                 payload: { errorMessage = '' },
             } = action as DishesFailedAction;
@@ -61,6 +62,7 @@ export const dishesReducer = (state: DishesState = initialDishesState, action: D
                 errorMessage: nextErrorMessage,
                 isLoading: false,
             };
+        }
         case ACTION_TYPE.DISHES_LOADING:
             return {
                 ...state,
