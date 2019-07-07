@@ -1,40 +1,34 @@
-import React, { useMemo } from 'react';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-} from 'reactstrap';
+import React, { useMemo, FC } from 'react';
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Dish } from '../shared/dishes';
 import MenuItem from './MenuItem';
+import LoadingProgress from './LoadingProgress';
 
-interface IMenuProps {
-    dishes: Array<Dish>,
-    // selectDish: (dishId: number) => () => void
+interface MenuProps {
+    dishes: Dish[];
+    isLoading: boolean;
+    errorMessage: string;
 }
 
-const Menu: React.FC<IMenuProps> = ({ dishes }) => {
-    const menu = useMemo(() => dishes.map((dish: Dish) =>
-        <MenuItem key={dish.id} dish={dish} />), [dishes]);
+const Menu: FC<MenuProps> = ({ dishes, isLoading, errorMessage }) => {
+    const menu = useMemo(() => dishes.map((dish: Dish) => <MenuItem key={dish.id} dish={dish} />), [dishes]);
 
     return (
         <div className="container">
             <div className="row">
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to='/home'>Home</Link>
+                        <Link to="/home">Home</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbItem active>
-                        Menu
-                    </BreadcrumbItem>
+                    <BreadcrumbItem active>Menu</BreadcrumbItem>
                 </Breadcrumb>
                 <div className="col-12">
                     <h3>Menu</h3>
-                    <hr/>
+                    <hr />
                 </div>
             </div>
-            <div className="row">
-                {menu}
-            </div>
+            <div className="row">{isLoading ? <LoadingProgress /> : errorMessage ? <h4>{errorMessage}</h4> : menu}</div>
         </div>
     );
 };

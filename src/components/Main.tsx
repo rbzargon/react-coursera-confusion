@@ -52,7 +52,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
         );
     };
 
-    const MenuPage = React.memo(() => <Menu dishes={props.dishesState.dishes} />);
+    const MenuPage = React.memo(() => <Menu {...props.dishesState} />);
     MenuPage.displayName = 'MenuPage';
 
     const DishWithId: FunctionComponent<DishWithIdProps> = ({
