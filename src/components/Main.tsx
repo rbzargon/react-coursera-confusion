@@ -1,9 +1,9 @@
-import React, { FunctionComponentElement, FunctionComponent, ReactNode } from 'react';
+import React, { FunctionComponent, FunctionComponentElement, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { addComment, CommentEntry } from '../redux/actionCreator';
+import { addComment, CommentEntry, fetchDishes } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
@@ -19,10 +19,12 @@ const mapStateToProps = (state: RootState) => {
 
 interface DispatchFromProps {
     addComment: (entry: CommentEntry) => void;
+    fetchDishes: () => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addComment: (entry: CommentEntry) => dispatch(addComment(entry)),
+    fetchDishes: () => fetchDishes()(dispatch),
 });
 
 interface DishWithIdProps {
@@ -34,10 +36,16 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
+    useEffect(() => {
+        props.fetchDishes();
+    }, []);
+
     const HomePage = (): FunctionComponentElement<void> => {
         return (
             <Home
                 dish={props.dishesState.dishes.find(d => d.featured)}
+                dishesLoading={props.dishesState.isLoading}
+                dishesErrorMessage={props.dishesState.errorMessage}
                 promotion={props.promotions.find(p => p.featured)}
                 leader={props.leaders.find(l => l.featured)}
             />
@@ -56,13 +64,15 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
             <AddCommentProvider value={props.addComment}>
                 <DishDetail
                     dish={props.dishesState.dishes.find(d => d.id === parseInt(dishId))}
+                    isLoading={props.dishesState.isLoading}
+                    errorMessage={props.dishesState.errorMessage}
                     comments={props.comments.filter(c => c.dishId === parseInt(dishId))}
                 />
             </AddCommentProvider>
         );
     };
 
-    const AboutUs: React.SFC<void> = () => {
+    const AboutUs: FunctionComponent<void> = () => {
         return <About leaders={props.leaders} />;
     };
 
