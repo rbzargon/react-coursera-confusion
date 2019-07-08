@@ -93,7 +93,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 <Route
                     exact
                     path="/contactus"
-                    component={() =>  <Contact resetFeedbackForm={props.resetFeedbackForm} />}
+                    component={() => <Contact resetFeedbackForm={props.resetFeedbackForm} />}
                 />
                 <Route exact path="/aboutus" component={AboutUs} />
                 <Redirect to="/home" />

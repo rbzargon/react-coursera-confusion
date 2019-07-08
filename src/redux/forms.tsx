@@ -16,4 +16,4 @@ export const INITIAL_FEEDBACK = {
     agree: false,
     contactType: 'Tel.',
     message: '',
-}
+};
