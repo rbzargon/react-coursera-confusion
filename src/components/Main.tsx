@@ -5,6 +5,7 @@ import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
 import { addComment, CommentEntry, fetchDishes } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
+import { actions } from 'react-redux-form';
 import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
@@ -20,11 +21,15 @@ const mapStateToProps = (state: RootState) => {
 interface DispatchFromProps {
     addComment: (entry: CommentEntry) => void;
     fetchDishes: () => void;
+    resetFeedbackForm: () => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addComment: (entry: CommentEntry) => dispatch(addComment(entry)),
     fetchDishes: () => fetchDishes()(dispatch),
+    resetFeedbackForm: () => {
+        dispatch(actions.reset('feedback'));
+    },
 });
 
 interface DishWithIdProps {
@@ -37,7 +42,7 @@ interface DishWithIdProps {
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
     const { fetchDishes } = props;
-
+    console.log('main props', props);
     useEffect(() => {
         fetchDishes();
     }, [fetchDishes]);
@@ -85,7 +90,11 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 <Route path="/home" component={HomePage} />
                 <Route exact path="/menu" component={MenuPage} />
                 <Route path="/menu/:dishId" component={DishWithId} />
-                <Route exact path="/contactus" component={Contact} />
+                <Route
+                    exact
+                    path="/contactus"
+                    component={() =>  <Contact resetFeedbackForm={props.resetFeedbackForm} />}
+                />
                 <Route exact path="/aboutus" component={AboutUs} />
                 <Redirect to="/home" />
             </Switch>

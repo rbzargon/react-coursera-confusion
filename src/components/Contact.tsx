@@ -1,36 +1,35 @@
 import React from 'react';
-import { Control, Errors, LocalForm, ValidatorFn } from "react-redux-form";
+import { Control, Errors, LocalForm, ValidatorFn, Form } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Button, Col, Label, Row } from 'reactstrap';
 
-interface IContactProps {
-
+interface ContactProps {
+    resetFeedbackForm: () => void;
 }
 
-
-const isRequired: ValidatorFn = (val: string = '') => { return !!val && !!val.length; }
-const maxLength = (len: number) => ({ length } = '') => (length >= len);
-const minLength = (len: number) => ({ length } = '') => (length <= len);
+const isRequired: ValidatorFn = (val: string = '') => {
+    return !!val && !!val.length;
+};
+const maxLength = (len: number) => ({ length } = '') => length >= len;
+const minLength = (len: number) => ({ length } = '') => length <= len;
 const isNumber: ValidatorFn = (val: string) => !isNaN(Number(val));
-const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+_]+@[A-Z0-9.0]+\.[A-Z]{2,4}$/i.test(val)
+const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+_]+@[A-Z0-9.0]+\.[A-Z]{2,4}$/i.test(val);
 
-export const Contact: React.SFC<IContactProps> = (props) => {
-
+export const Contact: React.SFC<ContactProps> = props => {
     const handleSubmit = (values: object) => {
         console.log(`Current state: ${values}`);
         alert(`Current state: ${JSON.stringify(values)}`);
-    }
+        props.resetFeedbackForm();
+    };
 
     return (
         <div className="container">
             <div className="row">
                 <Breadcrumb>
                     <BreadcrumbItem>
-                        <Link to='/home'>Home</Link>
+                        <Link to="/home">Home</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbItem active>
-                        Contact Us
-                    </BreadcrumbItem>
+                    <BreadcrumbItem active>Contact Us</BreadcrumbItem>
                 </Breadcrumb>
                 <div className="col-12">
                     <h3>Contact Us</h3>
@@ -44,11 +43,16 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                 <div className="col-12 col-sm-4 offset-sm-1">
                     <h5>Our Address</h5>
                     <address>
-                        121, Clear Water Bay Road<br />
-                        Clear Water Bay, Kowloon<br />
-                        HONG KONG<br />
-                        <i className="fa fa-phone"></i>: +852 1234 5678<br />
-                        <i className="fa fa-fax"></i>: +852 8765 4321<br />
+                        121, Clear Water Bay Road
+                        <br />
+                        Clear Water Bay, Kowloon
+                        <br />
+                        HONG KONG
+                        <br />
+                        <i className="fa fa-phone"></i>: +852 1234 5678
+                        <br />
+                        <i className="fa fa-fax"></i>: +852 8765 4321
+                        <br />
                         <i className="fa fa-envelope"></i>: <a href="mailto:confusion@food.net">confusion@food.net</a>
                     </address>
                 </div>
@@ -57,9 +61,15 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                 </div>
                 <div className="col-12 col-sm-11 offset-sm-1">
                     <div className="btn-group" role="group">
-                        <a role="button" className="btn btn-primary" href="tel:+85212345678"><i className="fa fa-phone"></i> Call</a>
-                        <a role="button" className="btn btn-info" href="https://www.skype.com"><i className="fa fa-skype"></i> Skype</a>
-                        <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
+                        <a role="button" className="btn btn-primary" href="tel:+85212345678">
+                            <i className="fa fa-phone"></i> Call
+                        </a>
+                        <a role="button" className="btn btn-info" href="https://www.skype.com">
+                            <i className="fa fa-skype"></i> Skype
+                        </a>
+                        <a role="button" className="btn btn-success" href="mailto:confusion@food.net">
+                            <i className="fa fa-envelope-o"></i> Email
+                        </a>
                     </div>
                 </div>
             </div>
@@ -68,17 +78,22 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                     <h3>Send us Your Feedback</h3>
                 </div>
                 <div className="col-12 col-md-9">
-                    <LocalForm onSubmit={(values) => handleSubmit(values)}>
+                    <LocalForm model="feedback" onSubmit={values => handleSubmit(values)}>
                         <Row className="form-group">
-                            <Label htmlFor="firstname" md={2}>First Name</Label>
+                            <Label htmlFor="firstname" md={2}>
+                                First Name
+                            </Label>
                             <Col md={10}>
-                                <Control.text model=".firstname" id="firstname" name="firstname"
+                                <Control.text
+                                    model=".firstname"
+                                    id="firstname"
+                                    name="firstname"
                                     placeholder="First Name"
                                     className="form-control"
                                     errors={{
                                         required: isRequired,
                                         minLength: minLength(3),
-                                        maxLength: maxLength(15)
+                                        maxLength: maxLength(15),
                                     }}
                                 />
                                 <Errors
@@ -88,22 +103,29 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                                     messages={{
                                         required: 'Required\t',
                                         minLength: 'Must be greater than 2 characters\t',
-                                        maxLength: 'Must be less than 16 characters'
+                                        maxLength: 'Must be less than 16 characters',
                                     }}
                                 />
                             </Col>
                         </Row>
                         <Row className="form-group">
-                            <Label htmlFor="lastname" md={2}>Last Name</Label>
+                            <Label htmlFor="lastname" md={2}>
+                                Last Name
+                            </Label>
                             <Col md={10}>
-                                <Control.text model=".lastname" type="text" id="lastname" name="lastname"
+                                <Control.text
+                                    model=".lastname"
+                                    type="text"
+                                    id="lastname"
+                                    name="lastname"
                                     className="form-control"
                                     placeholder="Last Name"
                                     errors={{
                                         required: isRequired,
                                         minLength: minLength(3),
-                                        maxLength: maxLength(15)
-                                    }} />
+                                        maxLength: maxLength(15),
+                                    }}
+                                />
                                 <Errors
                                     className="text-danger"
                                     model=".lastname"
@@ -111,53 +133,65 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                                     messages={{
                                         required: 'Required',
                                         minLength: 'Must be greater than 2 characters',
-                                        maxLength: 'Must be less than 16 characters'
+                                        maxLength: 'Must be less than 16 characters',
                                     }}
                                 />
                             </Col>
                         </Row>
                         <Row className="form-group">
-                            <Label htmlFor="telnum" md={2}>Telephone</Label>
+                            <Label htmlFor="telnum" md={2}>
+                                Telephone
+                            </Label>
                             <Col md={10}>
-                                <Control.text model=".telnum" id="telnum" name="telnum"
+                                <Control.text
+                                    model=".telnum"
+                                    id="telnum"
+                                    name="telnum"
                                     className="form-control"
                                     placeholder="Tel. Number"
                                     errors={{
                                         required: isRequired,
                                         minLength: minLength(10),
                                         maxLength: maxLength(15),
-                                        isNumber: isNumber
-                                    }} />
+                                        isNumber: isNumber,
+                                    }}
+                                />
                                 <Errors
                                     className="text-danger"
-                                    model=".lastname"
+                                    model=".telnum"
                                     show="touched"
                                     messages={{
                                         required: 'Required',
                                         minLength: 'Must be 10 or more numbers',
                                         maxLength: 'Must be less than 16 numbers',
-                                        isNumber: 'Must be a number'
+                                        isNumber: 'Must be a number',
                                     }}
                                 />
                             </Col>
                         </Row>
                         <Row className="form-group">
-                            <Label htmlFor="email" md={2}>Email</Label>
+                            <Label htmlFor="email" md={2}>
+                                Email
+                            </Label>
                             <Col md={10}>
-                                <Control.text model=".email" id="email" name="email"
+                                <Control.text
+                                    model=".email"
+                                    id="email"
+                                    name="email"
                                     className="form-control"
                                     placeholder="Email"
                                     errors={{
                                         required: isRequired,
-                                        validEmail: validEmail
-                                    }} />
+                                        validEmail: validEmail,
+                                    }}
+                                />
                                 <Errors
                                     className="text-danger"
                                     model=".email"
                                     show="touched"
                                     messages={{
                                         required: 'Required',
-                                        validEmail: 'Invalid email address'
+                                        validEmail: 'Invalid email address',
                                     }}
                                 />
                             </Col>
@@ -166,28 +200,40 @@ export const Contact: React.SFC<IContactProps> = (props) => {
                             <Col md={{ size: 6, offset: 2 }}>
                                 <div className="form-check">
                                     <Label check>
-                                        <Control.checkbox model=".agree" id="agree" name="agree"
-                                            className="form-check-input" />
-                                        {' '}<strong>May we contact you?</strong>
+                                        <Control.checkbox
+                                            model=".agree"
+                                            id="agree"
+                                            name="agree"
+                                            className="form-check-input"
+                                        />{' '}
+                                        <strong>May we contact you?</strong>
                                     </Label>
                                 </div>
                             </Col>
                             <Col md={{ size: 3, offset: 1 }}>
-                                <Control.select model=".contactType" name="contactType"
-                                    className="form-control">
+                                <Control.select model=".contactType" name="contactType" className="form-control">
                                     <option>Tel.</option>
                                     <option>Email</option>
                                 </Control.select>
                             </Col>
                         </Row>
                         <Row row>
-                            <Label htmlFor="feedback" md={2}>Your Feedback</Label>
+                            <Label htmlFor="feedback" md={2}>
+                                Your Feedback
+                            </Label>
                             <Col md={10}>
-                                <Control.textarea model=".message" id="message" name="message" className="form-control" placeholder="Feedback" rows={12} />
+                                <Control.textarea
+                                    model=".message"
+                                    id="message"
+                                    name="message"
+                                    className="form-control"
+                                    placeholder="Feedback"
+                                    rows={12}
+                                />
                             </Col>
                         </Row>
                         <Row row>
-                            <Col md={{ size: 10, offset: 2 }} >
+                            <Col md={{ size: 10, offset: 2 }}>
                                 <Button type="submit" color="primary">
                                     Send Feedback
                                 </Button>
@@ -198,6 +244,6 @@ export const Contact: React.SFC<IContactProps> = (props) => {
             </div>
         </div>
     );
-}
+};
 
 export default Contact;
