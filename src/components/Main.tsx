@@ -38,7 +38,7 @@ interface DishWithIdProps {
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
     useEffect(() => {
         props.fetchDishes();
-    }, []);
+    }, [props.fetchDishes]);
 
     const HomePage = (): FunctionComponentElement<void> => {
         return (
@@ -52,7 +52,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
         );
     };
 
-    const MenuPage = React.memo(() => <Menu {...props.dishesState} />);
+    const MenuPage = () => <Menu {...props.dishesState} />;
     MenuPage.displayName = 'MenuPage';
 
     const DishWithId: FunctionComponent<DishWithIdProps> = ({
