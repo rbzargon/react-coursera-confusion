@@ -49,7 +49,7 @@ export const dishesReducer = (state: DishesState = initialDishesState, action: D
                 ...state,
                 dishes: nextDishes,
                 errorMessage: '',
-                isLoading: true,
+                isLoading: false,
             };
         }
         case ACTION_TYPE.DISHES_FAILED: {
