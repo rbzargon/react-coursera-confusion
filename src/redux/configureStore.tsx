@@ -1,28 +1,36 @@
-import { combineReducers, createStore, Store, AnyAction } from 'redux';
+import { createForms } from 'react-redux-form';
+import { AnyAction, applyMiddleware, combineReducers, createStore, Store } from 'redux';
+import logger from 'redux-logger';
+import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { Comment } from '../shared/comments';
-import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
-import { Comments } from "./comments";
-import { Dishes } from "./dishes";
+import { Comments } from './comments';
+import { dishesReducer, DishesState } from './dishes';
+import { INITIAL_FEEDBACK } from './forms';
 import { Leaders } from './leaders';
-import { Promotions } from "./promotions";
+import { Promotions } from './promotions';
 
 export interface RootState {
-    comments: Comment[],
-    dishes: Dish[],
-    promotions: Promotion[],
-    leaders: Leader[]
+    comments: Comment[];
+    dishesState: DishesState;
+    promotions: Promotion[];
+    leaders: Leader[];
+    forms: any;
+    feedback: any;
 }
 
 export const configureStore = () => {
-    const store: Store<RootState, AnyAction> = createStore(
+    const store = createStore(
         combineReducers({
             comments: Comments,
-            dishes: Dishes,
+            dishesState: dishesReducer,
             promotions: Promotions,
             leaders: Leaders,
-        })
+            ...createForms({ feedback: INITIAL_FEEDBACK }),
+        }),
+        applyMiddleware(thunk as ThunkMiddleware<RootState, AnyAction>, logger),
     );
+    store.dispatch = store.dispatch as ThunkDispatch<Store, void, AnyAction>;
     return store;
 };

@@ -1,16 +1,16 @@
 import React from 'react';
 import { Card, CardBody, CardImg, CardText, CardTitle, CardSubtitle } from 'reactstrap';
 
-export interface IFeatureCardProps {
+export interface FeatureCardProps {
     item: {
-        image: string,
-        name: string,
-        designation?: string,
-        description: string
-    }
+        image: string;
+        name: string;
+        designation?: string;
+        description: string;
+    };
 }
 
-export const FeatureCard: React.FC<IFeatureCardProps> = ({ item }) => {
+export const FeatureCard: React.FC<FeatureCardProps> = ({ item }) => {
     return (
         <Card>
             <CardImg src={item.image} alt={item.name} />
@@ -21,6 +21,6 @@ export const FeatureCard: React.FC<IFeatureCardProps> = ({ item }) => {
             </CardBody>
         </Card>
     );
-}
+};
 
 export default FeatureCard;

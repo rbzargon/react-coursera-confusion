@@ -1,10 +1,11 @@
-import React from 'react';
-import { connect } from "react-redux";
+import React, { FunctionComponent, FunctionComponentElement, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { addComment, CommentEntry } from '../redux/actionCreator';
+import { addComment, CommentEntry, fetchDishes } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
+import { actions } from 'react-redux-form';
 import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
@@ -15,66 +16,96 @@ import Menu from './Menu';
 
 const mapStateToProps = (state: RootState) => {
     return state;
-}
+};
 
 interface DispatchFromProps {
-    addComment: (entry: CommentEntry) => void,
+    addComment: (entry: CommentEntry) => void;
+    fetchDishes: () => void;
+    resetFeedbackForm: () => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    addComment: (entry: CommentEntry) => dispatch(addComment(entry))
+    addComment: (entry: CommentEntry) => dispatch(addComment(entry)),
+    fetchDishes: () => fetchDishes()(dispatch),
+    resetFeedbackForm: () => {
+        dispatch(actions.reset('feedback'));
+    },
 });
 
-interface IDishWithIdProps {
+interface DishWithIdProps {
     match: {
         params: {
-            dishId: string
-        }
-    }
+            dishId: string;
+        };
+    };
 }
 
+export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
+    const { fetchDishes } = props;
+    console.log('main props', props);
+    useEffect(() => {
+        fetchDishes();
+    }, [fetchDishes]);
 
-export const Main: React.SFC<RootState & DispatchFromProps & RouteComponentProps> = (props) => {
-    console.log(props.comments);
-    const HomePage: React.SFC<void> = () => {
+    const HomePage = (): FunctionComponentElement<void> => {
         return (
-            <Home dish={props.dishes.find(d => d.featured)}
+            <Home
+                dish={props.dishesState.dishes.find(d => d.featured)}
+                dishesLoading={props.dishesState.isLoading}
+                dishesErrorMessage={props.dishesState.errorMessage}
                 promotion={props.promotions.find(p => p.featured)}
-                leader={props.leaders.find(l => l.featured)} />
+                leader={props.leaders.find(l => l.featured)}
+            />
         );
     };
 
-    const MenuPage = React.memo(() => <Menu dishes={props.dishes} />);
+    const MenuPage = () => <Menu {...props.dishesState} />;
+    MenuPage.displayName = 'MenuPage';
 
-    const DishWithId: React.SFC<IDishWithIdProps> = ({ match: { params: { dishId } } }) => {
+    const DishWithId: FunctionComponent<DishWithIdProps> = ({
+        match: {
+            params: { dishId },
+        },
+    }) => {
         return (
             <AddCommentProvider value={props.addComment}>
-                <DishDetail dish={props.dishes.find(d => d.id === parseInt(dishId))}
-                    comments={props.comments.filter(c => c.dishId === parseInt(dishId))} />
+                <DishDetail
+                    dish={props.dishesState.dishes.find(d => d.id === parseInt(dishId))}
+                    isLoading={props.dishesState.isLoading}
+                    errorMessage={props.dishesState.errorMessage}
+                    comments={props.comments.filter(c => c.dishId === parseInt(dishId))}
+                />
             </AddCommentProvider>
         );
     };
 
-    const AboutUs: React.SFC<void> = () => {
-        return (
-            <About leaders={props.leaders} />
-        );
+    const AboutUs: FunctionComponent<void> = () => {
+        return <About leaders={props.leaders} />;
     };
 
     return (
         <div>
             <Header />
             <Switch>
-                <Route path='/home' component={HomePage} />
-                <Route exact path='/menu' component={MenuPage} />
-                <Route path='/menu/:dishId' component={DishWithId} />
-                <Route exact path='/contactus' component={Contact} />
-                <Route exact path='/aboutus' component={AboutUs} />
-                <Redirect to='/home' />
+                <Route path="/home" component={HomePage} />
+                <Route exact path="/menu" component={MenuPage} />
+                <Route path="/menu/:dishId" component={DishWithId} />
+                <Route
+                    exact
+                    path="/contactus"
+                    component={() => <Contact resetFeedbackForm={props.resetFeedbackForm} />}
+                />
+                <Route exact path="/aboutus" component={AboutUs} />
+                <Redirect to="/home" />
             </Switch>
             <Footer />
         </div>
     );
-}
+};
 
-export default withRouter(connect<RootState, DispatchFromProps, {}, RootState>(mapStateToProps, mapDispatchToProps)(Main));
+export default withRouter(
+    connect<RootState, DispatchFromProps, {}, RootState>(
+        mapStateToProps,
+        mapDispatchToProps,
+    )(Main),
+);
