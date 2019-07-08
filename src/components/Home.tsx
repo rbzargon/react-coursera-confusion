@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
-
-import FeatureCard from './FeatureCard';
 import { Dish } from '../shared/dishes';
-import { Promotion } from '../shared/promotions';
 import { Leader } from '../shared/leaders';
+import { Promotion } from '../shared/promotions';
+import FeatureCard from './FeatureCard';
 import LoadingProgress from './LoadingProgress';
 
 interface HomeProps {
@@ -19,29 +18,19 @@ export const Home: FC<HomeProps> = props => {
 
     return (
         <div className="container">
-            <div className="row align-items-start">
-                {dishesLoading ? (
-                    <div className="col-12 col-md m-1">
+            <div className="row">
+                <div className="col-12 col-md m-1 text-center">
+                    {dishesLoading ? (
                         <LoadingProgress />
-                    </div>
-                ) : dishesErrorMessage ? (
-                    <div className="col-12 col-md m-1">
+                    ) : dishesErrorMessage ? (
                         <h4>{dishesErrorMessage}</h4>
-                    </div>
-                ) : !!dish ? (
-                    <div className="col-12 col-md m-1">
+                    ) : !!dish ? (
                         <FeatureCard item={dish} />
-                    </div>
-                ) : (
-                    ''
-                )}
-                {!!promotion ? (
-                    <div className="col-12 col-md m-1">
-                        <FeatureCard item={promotion} />
-                    </div>
-                ) : (
-                    ''
-                )}
+                    ) : (
+                        ''
+                    )}
+                </div>
+                <div className="col-12 col-md m-1">{!!promotion ? <FeatureCard item={promotion} /> : ''}</div>
                 {!!leader ? (
                     <div className="col-12 col-md m-1">
                         <FeatureCard item={leader} />

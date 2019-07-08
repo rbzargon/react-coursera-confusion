@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Dish } from '../shared/dishes';
 import MenuItem from './MenuItem';
 import LoadingProgress from './LoadingProgress';
+import classNames from 'classnames';
 
 interface MenuProps {
     dishes: Dish[];
@@ -28,7 +29,9 @@ const Menu: FC<MenuProps> = ({ dishes, isLoading, errorMessage }) => {
                     <hr />
                 </div>
             </div>
-            <div className="row">{isLoading ? <LoadingProgress /> : errorMessage ? <h4>{errorMessage}</h4> : menu}</div>
+            <div className={classNames('row justify-content-around', { 'text-center': isLoading })}>
+                {isLoading ? <LoadingProgress /> : errorMessage ? <h4>{errorMessage}</h4> : menu}
+            </div>
         </div>
     );
 };
