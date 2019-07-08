@@ -36,9 +36,11 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
+    const { fetchDishes } = props;
+
     useEffect(() => {
-        props.fetchDishes();
-    }, [props.fetchDishes]);
+        fetchDishes();
+    }, [fetchDishes]);
 
     const HomePage = (): FunctionComponentElement<void> => {
         return (
