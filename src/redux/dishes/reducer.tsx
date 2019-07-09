@@ -1,42 +1,8 @@
-import { Action } from 'redux';
-import { Dish } from '../shared/dishes';
-import { CommentEntry } from './actionCreator';
-import { ACTION_TYPE } from './actionType';
-
-export interface DishesState {
-    dishes: Dish[];
-    errorMessage: string;
-    isLoading: boolean;
-}
+import { DishesState } from './state';
+import { DishesActionTypes, AddDishesAction, DishesFailedAction } from './actions';
+import { ACTION_TYPE } from '../actionType';
 
 const initialDishesState: DishesState = { dishes: [], errorMessage: '', isLoading: true };
-
-export interface DishesFailedAction extends Action {
-    type: typeof ACTION_TYPE.DISHES_FAILED;
-    payload: {
-        errorMessage: string;
-    };
-}
-
-export interface DishesLoadingAction extends Action {
-    type: typeof ACTION_TYPE.DISHES_LOADING;
-}
-
-export interface AddDishesAction extends Action {
-    type: typeof ACTION_TYPE.ADD_DISHES;
-    payload: {
-        dishes: Dish[];
-    };
-}
-
-export interface AddCommentAction extends Action {
-    type: typeof ACTION_TYPE.ADD_COMMENT;
-    payload: {
-        commentEntry: CommentEntry;
-    };
-}
-
-export type DishesActionTypes = AddDishesAction | AddCommentAction | DishesFailedAction | DishesLoadingAction;
 
 export const dishesReducer = (state: DishesState = initialDishesState, action: DishesActionTypes): DishesState => {
     switch (action.type) {
@@ -64,6 +30,7 @@ export const dishesReducer = (state: DishesState = initialDishesState, action: D
             };
         }
         case ACTION_TYPE.DISHES_LOADING:
+            //no payload in this action type
             return {
                 ...state,
                 errorMessage: '',
