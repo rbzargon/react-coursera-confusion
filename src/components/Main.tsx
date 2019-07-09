@@ -12,7 +12,6 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
-import { FeedbackProvider } from '../context/feedback';
 
 const mapStateToProps = (state: RootState) => {
     return state;

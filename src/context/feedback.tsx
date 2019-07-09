@@ -17,6 +17,7 @@ export interface Feedback {
 
 export const FeedbackContext = React.createContext({
     feedback: {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setFeedback: (feedback: Feedback) => {},
 });
 

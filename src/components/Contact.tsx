@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Button, Col, Label, Row } from 'reactstrap';
 import { FeedbackContext } from '../context/feedback';
 
-
 const isRequired: ValidatorFn = (val: string = '') => {
     return !!val && !!val.length;
 };
