@@ -21,15 +21,11 @@ const mapStateToProps = (state: RootState) => {
 interface DispatchFromProps {
     addComment: (entry: CommentEntry) => void;
     fetchDishes: () => void;
-    resetFeedbackForm: () => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addComment: (entry: CommentEntry) => dispatch(addComment(entry)),
     fetchDishes: () => fetchDishes()(dispatch),
-    resetFeedbackForm: () => {
-        dispatch(actions.reset('feedback'));
-    },
 });
 
 interface DishWithIdProps {
@@ -41,7 +37,15 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
-    const { fetchDishes } = props;
+    const {
+        addComment,
+        comments,
+        dishesState,
+        fetchDishes,
+        leaders,
+        promotions,
+    } = props;
+
     console.log('main props', props);
     useEffect(() => {
         fetchDishes();
@@ -50,16 +54,16 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
     const HomePage = (): FunctionComponentElement<void> => {
         return (
             <Home
-                dish={props.dishesState.dishes.find(d => d.featured)}
-                dishesLoading={props.dishesState.isLoading}
-                dishesErrorMessage={props.dishesState.errorMessage}
-                promotion={props.promotions.find(p => p.featured)}
-                leader={props.leaders.find(l => l.featured)}
+                dish={dishesState.dishes.find(d => d.featured)}
+                dishesLoading={dishesState.isLoading}
+                dishesErrorMessage={dishesState.errorMessage}
+                promotion={promotions.find(p => p.featured)}
+                leader={leaders.find(l => l.featured)}
             />
         );
     };
 
-    const MenuPage = () => <Menu {...props.dishesState} />;
+    const MenuPage = () => <Menu {...dishesState} />;
     MenuPage.displayName = 'MenuPage';
 
     const DishWithId: FunctionComponent<DishWithIdProps> = ({
@@ -68,19 +72,19 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
         },
     }) => {
         return (
-            <AddCommentProvider value={props.addComment}>
+            <AddCommentProvider value={addComment}>
                 <DishDetail
-                    dish={props.dishesState.dishes.find(d => d.id === parseInt(dishId))}
-                    isLoading={props.dishesState.isLoading}
-                    errorMessage={props.dishesState.errorMessage}
-                    comments={props.comments.filter(c => c.dishId === parseInt(dishId))}
+                    dish={dishesState.dishes.find(d => d.id === parseInt(dishId))}
+                    isLoading={dishesState.isLoading}
+                    errorMessage={dishesState.errorMessage}
+                    comments={comments.filter(c => c.dishId === parseInt(dishId))}
                 />
             </AddCommentProvider>
         );
     };
 
     const AboutUs: FunctionComponent<void> = () => {
-        return <About leaders={props.leaders} />;
+        return <About leaders={leaders} />;
     };
 
     return (
@@ -93,7 +97,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 <Route
                     exact
                     path="/contactus"
-                    component={() => <Contact resetFeedbackForm={props.resetFeedbackForm} />}
+                    component={() => (<Contact />)}
                 />
                 <Route exact path="/aboutus" component={AboutUs} />
                 <Redirect to="/home" />
