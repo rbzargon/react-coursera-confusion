@@ -37,14 +37,7 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
-    const {
-        addComment,
-        comments,
-        dishesState,
-        fetchDishes,
-        leaders,
-        promotions,
-    } = props;
+    const { addComment, comments, dishesState, fetchDishes, leaders, promotions } = props;
 
     console.log('main props', props);
     useEffect(() => {
@@ -94,11 +87,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 <Route path="/home" component={HomePage} />
                 <Route exact path="/menu" component={MenuPage} />
                 <Route path="/menu/:dishId" component={DishWithId} />
-                <Route
-                    exact
-                    path="/contactus"
-                    component={() => (<Contact />)}
-                />
+                <Route exact path="/contactus" component={() => <Contact />} />
                 <Route exact path="/aboutus" component={AboutUs} />
                 <Redirect to="/home" />
             </Switch>
