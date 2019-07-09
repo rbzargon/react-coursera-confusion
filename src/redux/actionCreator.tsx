@@ -1,7 +1,9 @@
 import { Dispatch } from 'redux';
 import { Dish, DISHES } from '../shared/dishes';
 import { ACTION_TYPE } from './actionType';
-import { DishesActionTypes } from './dishes';
+import { DishesActionTypes } from './dishes/actions';
+import { CommentActionTypes } from './comments';
+import { Feedback, FeedbackActionTypes } from './feedback';
 
 export interface CommentEntry {
     dishId: number;
@@ -10,7 +12,7 @@ export interface CommentEntry {
     comment: string;
 }
 
-export const addComment = (commentEntry: CommentEntry): DishesActionTypes => ({
+export const addComment = (commentEntry: CommentEntry): CommentActionTypes => ({
     type: ACTION_TYPE.ADD_COMMENT,
     payload: { commentEntry },
 });
@@ -36,3 +38,12 @@ export const fetchDishes = () => (dispatch: Dispatch) => {
         dispatch(addDishes(DISHES));
     }, 2000);
 };
+
+export const changeFeedback = (feedback: Feedback): FeedbackActionTypes => ({
+    type: ACTION_TYPE.CHANGE_FEEDBACK,
+    payload: { feedback },
+});
+
+export const resetFeedback = (): FeedbackActionTypes => ({
+    type: ACTION_TYPE.RESET_FEEDBACK,
+});
