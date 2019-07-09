@@ -1,17 +1,25 @@
 import { COMMENTS, Comment } from '../shared/comments';
 import { ACTION_TYPE } from './actionType';
 import { CommentEntry } from './actionCreator';
+import { Action } from 'redux';
 
-export interface AddCommentAction {
-    type: string;
-    payload: CommentEntry;
+export interface AddCommentAction extends Action {
+    type: typeof ACTION_TYPE.ADD_COMMENT;
+    payload: {
+        commentEntry: CommentEntry;
+    };
 }
 
-export const Comments = (state: Comment[] = COMMENTS, action: AddCommentAction): Comment[] => {
+export type CommentActionTypes = AddCommentAction;
+
+export const commentsReducer = (state: Comment[] = COMMENTS, action: CommentActionTypes): Comment[] => {
     switch (action.type) {
         case ACTION_TYPE.ADD_COMMENT: {
-            const commentEntry = {
-                ...action.payload,
+            const {
+                payload: { commentEntry },
+            } = action as AddCommentAction;
+            const newComment = {
+                ...commentEntry,
                 id: state.length,
                 date: new Date(Date.now()).toLocaleString(navigator.language, {
                     year: 'numeric',
@@ -19,7 +27,7 @@ export const Comments = (state: Comment[] = COMMENTS, action: AddCommentAction):
                     day: '2-digit',
                 }),
             };
-            return state.concat(commentEntry);
+            return state.concat(newComment);
         }
         default:
             return state;
