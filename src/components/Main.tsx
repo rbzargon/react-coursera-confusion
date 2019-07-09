@@ -5,7 +5,6 @@ import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
 import { addComment, CommentEntry, fetchDishes } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
-import { actions } from 'react-redux-form';
 import About from './About';
 import Contact from './Contact';
 import DishDetail from './DishDetail';
@@ -13,6 +12,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
+import { FeedbackProvider } from '../context/feedback';
 
 const mapStateToProps = (state: RootState) => {
     return state;
@@ -87,7 +87,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 <Route path="/home" component={HomePage} />
                 <Route exact path="/menu" component={MenuPage} />
                 <Route path="/menu/:dishId" component={DishWithId} />
-                <Route exact path="/contactus" component={() => <Contact />} />
+                <Route exact path="/contactus" component={Contact} />
                 <Route exact path="/aboutus" component={AboutUs} />
                 <Redirect to="/home" />
             </Switch>
