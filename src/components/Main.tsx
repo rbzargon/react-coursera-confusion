@@ -36,7 +36,7 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
-    const { addComment, comments, dishesState, fetchDishes, leaders, promotions } = props;
+    const { addComment, commentsState, dishesState, fetchDishes, leaders, promotions } = props;
 
     console.log('main props', props);
     useEffect(() => {
@@ -69,7 +69,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                     dish={dishesState.dishes.find(d => d.id === parseInt(dishId))}
                     isLoading={dishesState.isLoading}
                     errorMessage={dishesState.errorMessage}
-                    comments={comments.filter(c => c.dishId === parseInt(dishId))}
+                    comments={commentsState.comments.filter(c => c.dishId === parseInt(dishId))}
                 />
             </AddCommentProvider>
         );
