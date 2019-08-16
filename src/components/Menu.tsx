@@ -5,14 +5,9 @@ import { Dish } from '../shared/dishes';
 import MenuItem from './MenuItem';
 import LoadingProgress from './LoadingProgress';
 import classNames from 'classnames';
+import { AppState } from '../redux/appState';
 
-interface MenuProps {
-    dishes: Dish[];
-    isLoading: boolean;
-    errorMessage: string;
-}
-
-const Menu: FC<MenuProps> = ({ dishes, isLoading, errorMessage }) => {
+const Menu: FC<AppState<Dish[]>> = ({ data: dishes, isLoading, errorMessage }) => {
     const menu = useMemo(() => dishes.map((dish: Dish) => <MenuItem key={dish.id} dish={dish} />), [dishes]);
 
     return (

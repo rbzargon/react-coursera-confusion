@@ -1,50 +1,38 @@
-import { Action, Reducer } from 'redux';
+import { Reducer } from 'redux';
 import { Comment } from '../shared/comments';
-import { CommentEntry } from './actionCreator';
+import { CommentEntry } from '../shared/commentEntry';
 import { ACTION_TYPE } from './actionType';
+import { AppAction } from './appAction';
+import { AppState } from './appState';
 
-export interface CommentState {
-    comments: Comment[];
-    errorMessage: string;
-    isLoading: boolean;
+export interface AddCommentAction extends AppAction<CommentEntry> {
+    type: typeof ACTION_TYPE.ADD_COMMENT;
+    payload: CommentEntry;
 }
 
-export interface AddCommentAction extends Action {
-    type: ACTION_TYPE.ADD_COMMENT;
-    payload: {
-        commentEntry: CommentEntry;
-    };
+export interface AddCommentsAction extends AppAction<Comment[]> {
+    type: typeof ACTION_TYPE.ADD_COMMENTS;
+    payload: Comment[];
 }
 
-export interface AddCommentsAction extends Action {
-    type: ACTION_TYPE.ADD_COMMENTS;
-    payload: {
-        comments: Comment[];
-    };
+export interface CommentsLoadingAction extends AppAction {
+    type: typeof ACTION_TYPE.COMMENTS_LOADING;
 }
 
-export interface CommentsLoadingAction extends Action {
-    type: ACTION_TYPE.COMMENTS_LOADING;
+export interface CommentsFailedAction extends AppAction<string> {
+    type: typeof ACTION_TYPE.COMMENTS_FAILED;
+    payload: string;
 }
 
-export interface CommentsFailedAction extends Action {
-    type: ACTION_TYPE.COMMENTS_FAILED;
-    payload: {
-        errorMessage: string;
-    };
-}
+export type CommentActionTypes = AppAction<Comment[]> | AppAction<CommentEntry> | AppAction<string> | AppAction;
 
-export type CommentActionTypes = AddCommentAction | AddCommentsAction | CommentsLoadingAction | CommentsFailedAction;
-
-export const commentsReducer: Reducer<CommentState | undefined, CommentActionTypes> = (state, action) => {
+export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> = (state, action) => {
     switch (action.type) {
         case ACTION_TYPE.ADD_COMMENT: {
-            const {
-                payload: { commentEntry },
-            } = action as AddCommentAction;
+            const { payload: commentEntry } = action as AddCommentAction;
             const newComment = {
                 ...commentEntry,
-                id: !state || !state.comments ? 0 : state.comments.length,
+                id: !state || !state.data ? 0 : state.data.length,
                 date: new Date(Date.now()).toLocaleString(navigator.language, {
                     year: 'numeric',
                     month: 'short',
@@ -53,39 +41,35 @@ export const commentsReducer: Reducer<CommentState | undefined, CommentActionTyp
             };
             return {
                 ...state,
-                comments: !state || !state.comments ? [newComment] : state.comments.concat(newComment),
+                data: !state || !state.data ? [newComment] : state.data.concat(newComment),
                 isLoading: false,
                 errorMessage: '',
             };
         }
         case ACTION_TYPE.ADD_COMMENTS: {
-            const {
-                payload: { comments },
-            } = action as AddCommentsAction;
-            return { ...state, comments, isLoading: false, errorMessage: '' };
+            const { payload: data } = action as AddCommentsAction;
+            return { ...state, data, isLoading: false, errorMessage: '' };
         }
         case ACTION_TYPE.COMMENTS_LOADING: {
             return {
                 ...state,
-                comments: !state || !state.comments ? [] : state.comments,
+                data: !state || !state.data ? [] : state.data,
                 isLoading: true,
                 errorMessage: '',
             };
         }
         case ACTION_TYPE.COMMENTS_FAILED: {
-            const {
-                payload: { errorMessage },
-            } = action as CommentsFailedAction;
+            const { payload: errorMessage } = action as CommentsFailedAction;
             return {
                 ...state,
-                comments: !state || !state.comments ? [] : state.comments,
+                data: !state || !state.data ? [] : state.data,
                 errorMessage,
                 isLoading: false,
             };
         }
         default:
             return {
-                comments: [],
+                data: [],
                 errorMessage: '',
                 isLoading: false,
             };

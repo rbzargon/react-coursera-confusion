@@ -1,17 +1,19 @@
 import { AnyAction, applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import logger from 'redux-logger';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
+import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
-import { commentsReducer, CommentState } from './comments';
+import { AppState } from './appState';
+import { commentsReducer } from './comments';
 import { dishesReducer } from './dishes/reducer';
-import { DishesState } from './dishes/state';
 import { leadersReducer } from './leaders';
 import { promotionsReducer } from './promotions';
+import { Comment } from '../shared/comments';
 
 export interface RootState {
-    commentsState: CommentState;
-    dishesState: DishesState;
+    commentsState: AppState<Comment[]>;
+    dishesState: AppState<Dish[]>;
     promotions: Promotion[];
     leaders: Leader[];
 }

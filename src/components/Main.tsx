@@ -12,6 +12,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
+import { Comment } from '../shared/comments';
 
 const mapStateToProps = (state: RootState) => {
     return state;
@@ -46,7 +47,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
     const HomePage = (): FunctionComponentElement<void> => {
         return (
             <Home
-                dish={dishesState.dishes.find(d => d.featured)}
+                dish={dishesState.data.find(d => d.featured)}
                 dishesLoading={dishesState.isLoading}
                 dishesErrorMessage={dishesState.errorMessage}
                 promotion={promotions.find(p => p.featured)}
@@ -66,10 +67,10 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
         return (
             <AddCommentProvider value={addComment}>
                 <DishDetail
-                    dish={dishesState.dishes.find(d => d.id === parseInt(dishId))}
+                    dish={dishesState.data.find(d => d.id === parseInt(dishId))}
                     isLoading={dishesState.isLoading}
                     errorMessage={dishesState.errorMessage}
-                    comments={commentsState.comments.filter(c => c.dishId === parseInt(dishId))}
+                    comments={commentsState.data.filter(c => c.dishId === parseInt(dishId))}
                 />
             </AddCommentProvider>
         );

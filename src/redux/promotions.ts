@@ -1,23 +1,20 @@
 import { Action } from 'redux';
 import { Promotion, PROMOTIONS } from '../shared/promotions';
 import { ACTION_TYPE } from './actionType';
+import { AppAction } from './appAction';
 
-export interface AddPromotionAction extends Action {
+export interface AddPromotionAction extends AppAction<Promotion[]> {
     type: ACTION_TYPE.ADD_PROMOTIONS;
-    payload: {
-        promotions: Promotion[];
-    };
+    payload: Promotion[];
 }
 
-export interface PromotionsLoadingAction extends Action {
+export interface PromotionsLoadingAction extends AppAction {
     type: ACTION_TYPE.PROMOTIONS_LOADING;
 }
 
-export interface PromotionsFailedAction extends Action {
+export interface PromotionsFailedAction extends AppAction<string> {
     type: ACTION_TYPE.PROMOTIONS_FAILED;
-    payload: {
-        errorMessage: string;
-    };
+    payload: string;
 }
 
 export type PromotionsActionTypes = AddPromotionAction | PromotionsLoadingAction | PromotionsFailedAction;
