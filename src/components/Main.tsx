@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { addComment, CommentEntry, fetchDishes } from '../redux/actionCreator';
+import { addComment, fetchDishes } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
@@ -12,7 +12,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
-import { Comment } from '../shared/comments';
+import { CommentEntry } from '../shared/commentEntry';
 
 const mapStateToProps = (state: RootState) => {
     return state;
