@@ -1,33 +1,30 @@
-import { createForms } from 'react-redux-form';
 import { AnyAction, applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import logger from 'redux-logger';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
-import { Comment } from '../shared/comments';
+import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
 import { Promotion } from '../shared/promotions';
-import { Comments } from './comments';
-import { dishesReducer, DishesState } from './dishes';
-import { INITIAL_FEEDBACK } from './forms';
-import { Leaders } from './leaders';
-import { Promotions } from './promotions';
+import { AppState } from './appState';
+import { commentsReducer } from './comments';
+import { dishesReducer } from './dishes/reducer';
+import { leadersReducer } from './leaders';
+import { promotionsReducer } from './promotions';
+import { Comment } from '../shared/comments';
 
 export interface RootState {
-    comments: Comment[];
-    dishesState: DishesState;
+    commentsState: AppState<Comment[]>;
+    dishesState: AppState<Dish[]>;
     promotions: Promotion[];
     leaders: Leader[];
-    forms: any;
-    feedback: any;
 }
 
 export const configureStore = () => {
     const store = createStore(
         combineReducers({
-            comments: Comments,
+            commentsState: commentsReducer,
             dishesState: dishesReducer,
-            promotions: Promotions,
-            leaders: Leaders,
-            ...createForms({ feedback: INITIAL_FEEDBACK }),
+            leaders: leadersReducer,
+            promotions: promotionsReducer,
         }),
         applyMiddleware(thunk as ThunkMiddleware<RootState, AnyAction>, logger),
     );

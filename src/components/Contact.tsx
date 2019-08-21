@@ -1,11 +1,8 @@
-import React from 'react';
-import { Control, Errors, LocalForm, ValidatorFn, Form } from 'react-redux-form';
+import React, { FC, useContext } from 'react';
+import { Control, Errors, LocalForm, ValidatorFn } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Button, Col, Label, Row } from 'reactstrap';
-
-interface ContactProps {
-    resetFeedbackForm: () => void;
-}
+import { FeedbackContext } from '../context/feedback';
 
 const isRequired: ValidatorFn = (val: string = '') => {
     return !!val && !!val.length;
@@ -15,11 +12,13 @@ const minLength = (len: number) => ({ length } = '') => length <= len;
 const isNumber: ValidatorFn = (val: string) => !isNaN(Number(val));
 const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+_]+@[A-Z0-9.0]+\.[A-Z]{2,4}$/i.test(val);
 
-export const Contact: React.SFC<ContactProps> = props => {
+export const Contact: FC<void> = () => {
+    const { feedback: initialFeedback, setFeedback } = useContext(FeedbackContext);
+
     const handleSubmit = (values: object) => {
         console.log(`Current state: ${values}`);
         alert(`Current state: ${JSON.stringify(values)}`);
-        props.resetFeedbackForm();
+        setFeedback({});
     };
 
     return (
@@ -78,7 +77,12 @@ export const Contact: React.SFC<ContactProps> = props => {
                     <h3>Send us Your Feedback</h3>
                 </div>
                 <div className="col-12 col-md-9">
-                    <LocalForm model="feedback" onSubmit={values => handleSubmit(values)}>
+                    <LocalForm
+                        model="feedback"
+                        onSubmit={values => handleSubmit(values)}
+                        onChange={values => setFeedback(values)}
+                        initialState={{ ...initialFeedback }}
+                    >
                         <Row className="form-group">
                             <Label htmlFor="firstname" md={2}>
                                 First Name
