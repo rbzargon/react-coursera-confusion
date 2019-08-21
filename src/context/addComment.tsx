@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { CommentEntry } from '../redux/actionCreator';
+import { CommentEntry } from '../shared/commentEntry';
 
 const AddCommentContext = React.createContext((entry: CommentEntry) => {});
 
