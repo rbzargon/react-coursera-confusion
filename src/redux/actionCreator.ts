@@ -6,9 +6,6 @@ import { Dish } from '../shared/dishes';
 import { Promotion } from '../shared/promotions';
 import { ACTION_TYPE } from './actionType';
 import { AppAction } from './appAction';
-import { AddCommentAction, CommentActionTypes, CommentsLoadingAction } from './comments';
-import { DishesActionTypes } from './dishes/actions';
-import { PromotionsActionTypes } from './promotions';
 
 export interface AppActionCreator<T> {
     add: (data: T) => AppAction<T>;
@@ -16,14 +13,17 @@ export interface AppActionCreator<T> {
     failed: (errorMessage: string) => AppAction<string>;
     loading: () => AppAction;
 }
+interface AddCommentEntry {
+    addCommentEntry(data: CommentEntry): AppAction<CommentEntry>;
+}
 
-export const CommentsActions: AppActionCreator<Comment[]> = class {
+export const CommentsActions: AppActionCreator<Comment[]> & AddCommentEntry = class {
     public static add = (data: Comment[]): AppAction<Comment[]> => ({
         type: ACTION_TYPE.ADD_COMMENTS,
         payload: data,
     });
 
-    public static addCommentEntry = (data: CommentEntry): AddCommentAction => ({
+    public static addCommentEntry = (data: CommentEntry): AppAction<CommentEntry> => ({
         type: ACTION_TYPE.ADD_COMMENT,
         payload: data,
     });
@@ -40,75 +40,53 @@ export const CommentsActions: AppActionCreator<Comment[]> = class {
             .then((comments: Comment[]) => dispatch(CommentsActions.add(comments)));
     };
 
-    public static loading = (): CommentsLoadingAction => ({
+    public static loading = (): AppAction => ({
         type: ACTION_TYPE.COMMENTS_LOADING,
     });
 };
 
-export const addComment = (commentEntry: CommentEntry): CommentActionTypes => ({
-    type: ACTION_TYPE.ADD_COMMENT,
-    payload: commentEntry,
-});
+export const DishesActions: AppActionCreator<Dish[]> = class {
+    public static add = (dishes: Dish[]): AppAction<Dish[]> => ({
+        type: ACTION_TYPE.ADD_DISHES,
+        payload: dishes,
+    });
 
-export const addComments = (comments: Comment[]): CommentActionTypes => ({
-    type: ACTION_TYPE.ADD_COMMENTS,
-    payload: comments,
-});
+    public static failed = (errorMessage: string): AppAction<string> => ({
+        type: ACTION_TYPE.DISHES_FAILED,
+        payload: errorMessage,
+    });
 
-export const commentsFailed = (errorMessage: string): CommentActionTypes => ({
-    type: ACTION_TYPE.COMMENTS_FAILED,
-    payload: errorMessage,
-});
+    public static loading = (): AppAction => ({
+        type: ACTION_TYPE.DISHES_LOADING,
+    });
 
-export const commentsLoading = (): CommentActionTypes => ({
-    type: ACTION_TYPE.COMMENTS_LOADING,
-});
-
-export const fetchComments = () => (dispatch: Dispatch) => {
-    dispatch(commentsLoading());
-    return fetch(`${BASE_URL}comments`)
-        .then(resp => resp.json())
-        .then((comments: Comment[]) => dispatch(addComments(comments)));
+    public static fetch = () => (dispatch: Dispatch): Promise<AppAction<Dish[]>> => {
+        dispatch(DishesActions.loading());
+        return fetch(`${BASE_URL}dishes`)
+            .then(resp => resp.json())
+            .then((dishes: Dish[]) => dispatch(DishesActions.add(dishes)));
+    };
 };
 
-export const addDishes = (dishes: Dish[]): DishesActionTypes => ({
-    type: ACTION_TYPE.ADD_DISHES,
-    payload: dishes,
-});
+const PromotionsActions: AppActionCreator<Promotion[]> = class {
+    public static add = (promotions: Promotion[]): AppAction<Promotion[]> => ({
+        type: ACTION_TYPE.ADD_PROMOTIONS,
+        payload: promotions,
+    });
 
-export const dishesFailed = (errorMessage: string): DishesActionTypes => ({
-    type: ACTION_TYPE.DISHES_FAILED,
-    payload: errorMessage,
-});
+    public static failed = (errorMessage: string): AppAction<string> => ({
+        type: ACTION_TYPE.PROMOTIONS_FAILED,
+        payload: errorMessage,
+    });
 
-export const dishesLoading = (): DishesActionTypes => ({
-    type: ACTION_TYPE.DISHES_LOADING,
-});
+    public static loading = (): AppAction => ({
+        type: ACTION_TYPE.PROMOTIONS_LOADING,
+    });
 
-export const fetchDishes = () => (dispatch: Dispatch) => {
-    dispatch(dishesLoading());
-    return fetch(`${BASE_URL}dishes`)
-        .then(resp => resp.json())
-        .then((dishes: Dish[]) => dispatch(addDishes(dishes)));
-};
-
-export const addPromotions = (promotions: Promotion[]): PromotionsActionTypes => ({
-    type: ACTION_TYPE.ADD_PROMOTIONS,
-    payload: promotions,
-});
-
-export const promotionsFailed = (errorMessage: string): PromotionsActionTypes => ({
-    type: ACTION_TYPE.PROMOTIONS_FAILED,
-    payload: errorMessage,
-});
-
-export const promotionsLoading = (): PromotionsActionTypes => ({
-    type: ACTION_TYPE.PROMOTIONS_LOADING,
-});
-
-export const fetchPromotions = () => (dispatch: Dispatch) => {
-    dispatch(dishesLoading());
-    return fetch(`${BASE_URL}promotions`)
-        .then(resp => resp.json())
-        .then((dishes: Dish[]) => dispatch(addDishes(dishes)));
-};
+    public static fetch = () => (dispatch: Dispatch): Promise<AppAction<Promotion[]>> => {
+        dispatch(PromotionsActions.loading());
+        return fetch(`${BASE_URL}promotions`)
+            .then(resp => resp.json())
+            .then((promotions: Promotion[]) => dispatch(PromotionsActions.add(promotions)));
+    };
+}

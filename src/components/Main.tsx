@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { addComment, fetchDishes } from '../redux/actionCreator';
+import { CommentsActions, DishesActions } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
@@ -24,8 +24,8 @@ interface DispatchFromProps {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    addComment: (entry: CommentEntry) => dispatch(addComment(entry)),
-    fetchDishes: () => fetchDishes()(dispatch),
+    addComment: (entry: CommentEntry) => CommentsActions.addCommentEntry(entry),
+    fetchDishes: () => DishesActions.fetch()(dispatch),
 });
 
 interface DishWithIdProps {
