@@ -89,4 +89,4 @@ const PromotionsActions: AppActionCreator<Promotion[]> = class {
             .then(resp => resp.json())
             .then((promotions: Promotion[]) => dispatch(PromotionsActions.add(promotions)));
     };
-}
+};
