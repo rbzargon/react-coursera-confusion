@@ -16,11 +16,11 @@ export interface AddCommentsAction extends AppAction<Comment[]> {
 }
 
 export interface CommentsLoadingAction extends AppAction {
-    type: typeof ACTION_TYPE.COMMENTS_LOADING;
+    type: typeof ACTION_TYPE.LOADING_COMMENTS;
 }
 
 export interface CommentsFailedAction extends AppAction<string> {
-    type: typeof ACTION_TYPE.COMMENTS_FAILED;
+    type: typeof ACTION_TYPE.FAILED_COMMENTS;
     payload: string;
 }
 
@@ -50,7 +50,7 @@ export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> =
             const { payload: data } = action as AddCommentsAction;
             return { ...state, data, isLoading: false, errorMessage: '' };
         }
-        case ACTION_TYPE.COMMENTS_LOADING: {
+        case ACTION_TYPE.LOADING_COMMENTS: {
             return {
                 ...state,
                 data: !state || !state.data ? [] : state.data,
@@ -58,7 +58,7 @@ export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> =
                 errorMessage: '',
             };
         }
-        case ACTION_TYPE.COMMENTS_FAILED: {
+        case ACTION_TYPE.FAILED_COMMENTS: {
             const { payload: errorMessage } = action as CommentsFailedAction;
             return {
                 ...state,

@@ -14,8 +14,8 @@ import { Comment } from '../shared/comments';
 export interface RootState {
     commentsState: AppState<Comment[]>;
     dishesState: AppState<Dish[]>;
-    promotions: Promotion[];
-    leaders: Leader[];
+    promotionsState: AppState<Promotion[]>;
+    leadersState: AppState<Leader[]>;
 }
 
 export const configureStore = () => {
@@ -23,8 +23,8 @@ export const configureStore = () => {
         combineReducers({
             commentsState: commentsReducer,
             dishesState: dishesReducer,
-            leaders: leadersReducer,
-            promotions: promotionsReducer,
+            leadersState: leadersReducer,
+            promotionsState: promotionsReducer,
         }),
         applyMiddleware(thunk as ThunkMiddleware<RootState, AnyAction>, logger),
     );

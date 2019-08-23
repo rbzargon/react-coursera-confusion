@@ -37,7 +37,7 @@ interface DishWithIdProps {
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
-    const { addComment, commentsState, dishesState, fetchDishes, leaders, promotions } = props;
+    const { addComment, commentsState, dishesState, fetchDishes, leadersState, promotionsState } = props;
 
     console.log('main props', props);
     useEffect(() => {
@@ -50,8 +50,8 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 dish={dishesState.data.find(d => d.featured)}
                 dishesLoading={dishesState.isLoading}
                 dishesErrorMessage={dishesState.errorMessage}
-                promotion={promotions.find(p => p.featured)}
-                leader={leaders.find(l => l.featured)}
+                promotion={promotionsState.data.find(p => p.featured)}
+                leader={leadersState.data.find(l => l.featured)}
             />
         );
     };
@@ -77,7 +77,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
     };
 
     const AboutUs: FunctionComponent<void> = () => {
-        return <About leaders={leaders} />;
+        return <About leaders={leadersState.data} />;
     };
 
     return (

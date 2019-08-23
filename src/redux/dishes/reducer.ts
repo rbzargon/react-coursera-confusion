@@ -20,7 +20,7 @@ export const dishesReducer = (
                 isLoading: false,
             };
         }
-        case ACTION_TYPE.DISHES_FAILED: {
+        case ACTION_TYPE.FAILED_DISHES: {
             const { payload: errorMessage } = action as DishesFailedAction;
             const nextErrorMessage = errorMessage || '';
             return {
@@ -29,7 +29,7 @@ export const dishesReducer = (
                 isLoading: false,
             };
         }
-        case ACTION_TYPE.DISHES_LOADING:
+        case ACTION_TYPE.LOADING_DISHES:
             //no payload in this action type
             return {
                 ...state,
