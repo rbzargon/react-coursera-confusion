@@ -31,7 +31,7 @@ interface DispatchFromProps {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    addComment: (entry: CommentEntry) => CommentsActions.addCommentEntry(entry),
+    addComment: (entry: CommentEntry) => CommentsActions.postCommentEntry(entry)(dispatch),
     fetchComments: () => CommentsActions.fetch()(dispatch),
     fetchDishes: () => DishesActions.fetch()(dispatch),
     fetchLeaders: () => LeadersActions.fetch()(dispatch),

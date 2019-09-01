@@ -16,6 +16,16 @@ export interface AppActionCreator<T> {
     loading: () => AppAction;
 }
 
+const onResolved = (response: Response) => {
+    if (response.ok) return response;
+    throw new Error(`Error ${response.status}: ${response.statusText}`);
+};
+
+const onRejected = (error: Error) => {
+    const errorMessage = new Error(error.message);
+    throw errorMessage;
+};
+
 class AppActionCreatorFactory {
     public static create<T>(endpoint: string): AppActionCreator<T> {
         class TActions {
@@ -32,16 +42,7 @@ class AppActionCreatorFactory {
             public static fetch = () => (dispatch: Dispatch): Promise<AppAction<T | string>> => {
                 dispatch(TActions.loading());
                 return fetch(`${BASE_URL}${endpoint}`)
-                    .then(
-                        response => {
-                            if (response.ok) return response;
-                            throw new Error(`${endpoint} - Error ${response.status}: ${response.statusText}`);
-                        },
-                        error => {
-                            const errorMessage = new Error(`${endpoint} - ${error.message}`);
-                            throw errorMessage;
-                        },
-                    )
+                    .then(onResolved, onRejected)
                     .then(resp => resp.json())
                     .then((data: T) => dispatch(TActions.add(data)))
                     .catch((error: Error) => dispatch(TActions.failed(error.message)));
@@ -59,18 +60,43 @@ export interface CommentEntryAction {
     addCommentEntry: (data: CommentEntry) => { type: ACTION_TYPE.ADD_COMMENT };
 }
 
-const CommentsOnlyActions = AppActionCreatorFactory.create<Comment[]>('comments');
-export const CommentsActions = extend(
-    CommentsOnlyActions,
-    class {
+export interface CommentPostAction {
+    postCommentEntry: (data: CommentEntry) => (dispatch: Dispatch) => Promise<AppAction<CommentEntry | void>>;
+}
+
+const CommentExtension = () => {
+    class CommentEntryExtension {
         public static addCommentEntry = (data: CommentEntry): AppAction<CommentEntry> => ({
             type: ACTION_TYPE.ADD_COMMENT,
             payload: data,
         });
-    },
-);
+        public static postCommentEntry = (data: CommentEntry) => (dispatch: Dispatch) => {
+            const newComment = { ...data, date: new Date().toISOString() };
+            return fetch(`${BASE_URL}comments`, {
+                method: 'POST',
+                body: JSON.stringify(newComment),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+            })
+                .then(onResolved, onRejected)
+                .then(response => response.json())
+                .then(response => dispatch(CommentEntryExtension.addCommentEntry(response)))
+                .catch(error => {
+                    console.log(`Post comments ${error}`);
+                    alert(`Comeent could not be posted:\nError: ${error.message}`);
+                });
+        };
+    }
+    return CommentEntryExtension;
+};
+
+const CommentsOnlyActions = AppActionCreatorFactory.create<Comment[]>('comments');
+export const CommentsActions = extend(CommentsOnlyActions, CommentExtension());
 interface CommentsActions extends AppActionCreator<Comment[]> {
     addCommentEntry(data: CommentEntry): AppAction<CommentEntry>;
+    postCommentEntry(data: CommentEntry): AppAction<CommentEntry>;
 }
 export const DishesActions = AppActionCreatorFactory.create<Dish[]>('dishes');
 export const PromotionsActions = AppActionCreatorFactory.create<Promotion[]>('promotions');

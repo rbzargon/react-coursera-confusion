@@ -201,6 +201,30 @@
       "comment": "It's your birthday, we're gonna party!",
       "author": "25 Cent",
       "date": "2011-12-02T17:57:28.556094Z"
+    },
+    {
+      "author": "Coop",
+      "comment": "Woohoo, it works!",
+      "dishId": 0,
+      "rating": 1,
+      "date": "2019-09-01T19:15:17.663Z",
+      "id": 20
+    },
+    {
+      "author": "Doggo",
+      "comment": "Much delicious...",
+      "dishId": 0,
+      "rating": 5,
+      "date": "2019-09-01T19:18:56.271Z",
+      "id": 21
+    },
+    {
+      "author": "DJ K",
+      "comment": "Another one",
+      "dishId": 0,
+      "rating": 3,
+      "date": "2019-09-01T19:23:24.864Z",
+      "id": 22
     }
   ],
   "promotions": [
