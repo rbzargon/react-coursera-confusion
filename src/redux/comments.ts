@@ -25,8 +25,12 @@ export interface CommentsFailedAction extends AppAction<string> {
 }
 
 export type CommentActionTypes = AppAction<Comment[]> | AppAction<CommentEntry> | AppAction<string> | AppAction;
-
-export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> = (state, action) => {
+const initialState = {
+    data: [],
+    errorMessage: '',
+    isLoading: false,
+};
+export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> = (state = initialState, action) => {
     switch (action.type) {
         case ACTION_TYPE.ADD_COMMENT: {
             const { payload: commentEntry } = action as AddCommentAction;
@@ -68,10 +72,6 @@ export const commentsReducer: Reducer<AppState<Comment[]>, CommentActionTypes> =
             };
         }
         default:
-            return {
-                data: [],
-                errorMessage: '',
-                isLoading: false,
-            };
+            return state;
     }
 };
