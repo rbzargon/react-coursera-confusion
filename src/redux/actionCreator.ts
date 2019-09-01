@@ -11,7 +11,7 @@ import { extend } from '../shared/utils';
 
 export interface AppActionCreator<T> {
     add: (data: T) => AppAction<T>;
-    fetch: () => (dispatch: Dispatch<AppAction>) => Promise<AppAction<T>>;
+    fetch: () => (dispatch: Dispatch<AppAction>) => Promise<AppAction<T | string>>;
     failed: (errorMessage: string) => AppAction<string>;
     loading: () => AppAction;
 }
@@ -29,11 +29,22 @@ class AppActionCreatorFactory {
                 payload: errorMessage,
             });
 
-            public static fetch = () => (dispatch: Dispatch): Promise<AppAction<T>> => {
+            public static fetch = () => (dispatch: Dispatch): Promise<AppAction<T | string>> => {
                 dispatch(TActions.loading());
                 return fetch(`${BASE_URL}${endpoint}`)
+                    .then(
+                        response => {
+                            if (response.ok) return response;
+                            throw new Error(`${endpoint} - Error ${response.status}: ${response.statusText}`);
+                        },
+                        error => {
+                            const errorMessage = new Error(`${endpoint} - ${error.message}`);
+                            throw errorMessage;
+                        },
+                    )
                     .then(resp => resp.json())
-                    .then((data: T) => dispatch(TActions.add(data)));
+                    .then((data: T) => dispatch(TActions.add(data)))
+                    .catch((error: Error) => dispatch(TActions.failed(error.message)));
             };
 
             public static loading = (): AppAction => ({
