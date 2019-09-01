@@ -16,7 +16,6 @@ export const Contact: FC<void> = () => {
     const { feedback: initialFeedback, setFeedback } = useContext(FeedbackContext);
 
     const handleSubmit = (values: object) => {
-        console.log(`Current state: ${values}`);
         alert(`Current state: ${JSON.stringify(values)}`);
         setFeedback({});
     };
