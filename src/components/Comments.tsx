@@ -1,61 +1,53 @@
-import React, { useState, FC } from 'react';
-
+import React, { useState } from 'react';
+import { Button } from 'reactstrap';
 import { Comment } from '../shared/comments';
 import { CommentForm } from './CommentForm';
-import { Button } from 'reactstrap';
+import LoadingProgress from './LoadingProgress';
 
 export interface CommentsProps {
     comments?: Comment[];
+    errorMessage: string;
+    isLoading: boolean;
     dishId: number;
 }
+export function Comments(props: CommentsProps) {
+    const { comments, errorMessage, isLoading, dishId } = props;
+    const [isFormOpen, setFormOpen] = useState(false);
 
-const Comments: FC<CommentsProps> = React.memo(
-    props => {
-        console.log('comments props', props);
-        const { comments, dishId } = props;
-        const [isFormOpen, setFormOpen] = useState(false);
-
-        return !!comments ? ( //null check
-            <>
-                <h4>Comments</h4>
-                {comments.map((c, idx) => (
-                    <blockquote key={idx} className="blockquote">
-                        {c.comment}
-                        <footer className="blockquote-footer">
-                            <b>{c.author}</b>{' '}
-                            {new Date(c.date).toLocaleString(navigator.language, {
-                                year: 'numeric',
-                                month: 'short',
-                                day: '2-digit',
-                            })}
-                        </footer>
-                    </blockquote>
-                ))}
-                <Button onClick={() => setFormOpen(true)} type="button" className="btn btn-light">
-                    <i className="fa fa-pencil"></i> Submit Comment
-                </Button>
-                <CommentForm
-                    dishId={dishId}
-                    isOpen={isFormOpen}
-                    toggle={() => {
-                        setFormOpen(false);
-                    }}
-                />
-            </>
-        ) : (
-            <div></div>
-        );
-    },
-    (prevProps, nextProps) => {
-        const empty = [{ id: -1 }];
-        const { comments: prevComments = empty } = prevProps;
-        const { comments: nextComments = empty } = nextProps;
-        return (
-            prevComments === nextComments ||
-            (prevComments.length === nextComments.length &&
-                prevComments.every((prevComment, idx) => prevComment.id === nextComments[idx].id))
-        );
-    },
-);
+    return isLoading ? (
+        <LoadingProgress />
+    ) : errorMessage ? (
+        <h4>{errorMessage}</h4>
+    ) : !!comments ? (
+        <>
+            <h4>Comments</h4>
+            {comments.map((c, idx) => (
+                <blockquote key={idx} className="blockquote">
+                    {c.comment}
+                    <footer className="blockquote-footer">
+                        <b>{c.author}</b>{' '}
+                        {new Date(c.date).toLocaleString(navigator.language, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                        })}
+                    </footer>
+                </blockquote>
+            ))}
+            <Button onClick={() => setFormOpen(true)} type="button" className="btn btn-light">
+                <i className="fa fa-pencil"></i> Submit Comment
+            </Button>
+            <CommentForm
+                dishId={dishId}
+                isOpen={isFormOpen}
+                toggle={() => {
+                    setFormOpen(false);
+                }}
+            />
+        </>
+    ) : (
+        <div></div>
+    );
+}
 
 export default Comments;

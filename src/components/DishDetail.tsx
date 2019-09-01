@@ -1,6 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { CommentEntry } from '../shared/commentEntry';
 import { Comment } from '../shared/comments';
 import { Dish } from '../shared/dishes';
 import Comments from './Comments';
@@ -8,76 +9,69 @@ import DishCard from './DishCard';
 import LoadingProgress from './LoadingProgress';
 
 export interface DishDetailProps {
+    addComment?: (entry: CommentEntry) => void;
     dish?: Dish;
-    comments?: Comment[];
-    isLoading: boolean;
-    errorMessage: string;
+    dishErrorMessage: string;
+    dishLoading: boolean;
+    comments: Comment[];
+    commentsErrorMessage: string;
+    commentsLoading: boolean;
 }
 
-export const DishDetail: FunctionComponent<DishDetailProps> = React.memo(
-    props => {
-        const { dish, comments, isLoading, errorMessage } = props;
+function DishDetail(props: DishDetailProps) {
+    const { comments, commentsErrorMessage, commentsLoading, dish, dishErrorMessage, dishLoading } = props;
 
-        if (isLoading)
-            return (
-                <div className="container">
-                    <div className="row">
-                        <LoadingProgress />
-                    </div>
-                </div>
-            );
-        else if (errorMessage)
-            return (
-                <div className="container">
-                    <div className="row">
-                        <h4>{errorMessage}</h4>
-                    </div>
-                </div>
-            );
-
-        return !!dish ? (
+    if (dishLoading)
+        return (
             <div className="container">
                 <div className="row">
-                    <Breadcrumb>
-                        <BreadcrumbItem>
-                            <Link to="/home">Home</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem>
-                            <Link to="/menu">Menu</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
-                    </Breadcrumb>
-                    <div className="col-12">
-                        <h3>{dish.name}</h3>
-                        <hr />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12 col-md-5 m-1">
-                        <DishCard dish={dish} isLoading={isLoading} errorMessage={errorMessage} />
-                    </div>
-                    <div className="col-12 col-md-5 m-1">
-                        <Comments comments={comments} dishId={dish.id} />
-                    </div>
+                    <LoadingProgress />
                 </div>
             </div>
-        ) : (
-            <div></div>
         );
-    },
-    (prevProps, nextProps) => {
-        const empty = { id: -1 };
-        const { dish: prevDish = empty, isLoading: prevLoading, errorMessage: prevError } = prevProps;
-        const { dish: nextDish = empty, isLoading: nextLoading, errorMessage: nextError } = nextProps;
+    else if (dishErrorMessage)
         return (
-            prevDish === nextDish ||
-            prevDish.id === nextDish.id ||
-            prevLoading === nextLoading ||
-            prevError === nextError
+            <div className="container">
+                <div className="row">
+                    <h4>{dishErrorMessage}</h4>
+                </div>
+            </div>
         );
-    },
-);
 
-DishDetail.displayName = 'DishDetail';
+    return !!dish ? (
+        <div className="container">
+            <div className="row">
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <Link to="/home">Home</Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <Link to="/menu">Menu</Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>{dish.name}</h3>
+                    <hr />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12 col-md-5 m-1">
+                    <DishCard dish={dish} isLoading={dishLoading} errorMessage={dishErrorMessage} />
+                </div>
+                <div className="col-12 col-md-5 m-1">
+                    <Comments
+                        comments={comments}
+                        isLoading={commentsLoading}
+                        errorMessage={commentsErrorMessage}
+                        dishId={dish.id}
+                    />
+                </div>
+            </div>
+        </div>
+    ) : (
+        <div></div>
+    );
+}
 
 export default DishDetail;

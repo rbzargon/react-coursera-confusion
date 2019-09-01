@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { CommentsActions, DishesActions } from '../redux/actionCreator';
+import { CommentsActions, DishesActions, PromotionsActions, LeadersActions } from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
@@ -12,7 +12,11 @@ import Footer from './Footer';
 import Header from './Header';
 import Home from './Home';
 import Menu from './Menu';
+import { Comment } from '../shared/comments';
 import { CommentEntry } from '../shared/commentEntry';
+import { AppState } from '../redux/appState';
+import { Dish } from '../shared/dishes';
+import { Leader } from '../shared/leaders';
 
 const mapStateToProps = (state: RootState) => {
     return state;
@@ -20,29 +24,45 @@ const mapStateToProps = (state: RootState) => {
 
 interface DispatchFromProps {
     addComment: (entry: CommentEntry) => void;
+    fetchComments: () => void;
     fetchDishes: () => void;
+    fetchLeaders: () => void;
+    fetchPromotions: () => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addComment: (entry: CommentEntry) => CommentsActions.addCommentEntry(entry),
+    fetchComments: () => CommentsActions.fetch()(dispatch),
     fetchDishes: () => DishesActions.fetch()(dispatch),
+    fetchLeaders: () => LeadersActions.fetch()(dispatch),
+    fetchPromotions: () => PromotionsActions.fetch()(dispatch),
 });
 
-interface DishWithIdProps {
-    match: {
-        params: {
-            dishId: string;
-        };
+interface DishMatch {
+    params: {
+        dishId: string;
     };
 }
 
 export const Main: FunctionComponent<RootState & DispatchFromProps & RouteComponentProps> = props => {
-    const { addComment, commentsState, dishesState, fetchDishes, leadersState, promotionsState } = props;
+    const {
+        addComment,
+        commentsState,
+        dishesState,
+        fetchComments,
+        fetchDishes,
+        fetchLeaders,
+        fetchPromotions,
+        leadersState,
+        promotionsState,
+    } = props;
 
-    console.log('main props', props);
     useEffect(() => {
+        fetchComments();
         fetchDishes();
-    }, [fetchDishes]);
+        fetchLeaders();
+        fetchPromotions();
+    }, [fetchComments, fetchDishes, fetchLeaders, fetchPromotions]);
 
     const HomePage = (): FunctionComponentElement<void> => {
         return (
@@ -51,44 +71,64 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                 dishesLoading={dishesState.isLoading}
                 dishesErrorMessage={dishesState.errorMessage}
                 promotion={promotionsState.data.find(p => p.featured)}
+                promotionsLoading={promotionsState.isLoading}
+                promotionsErrorMessage={promotionsState.errorMessage}
                 leader={leadersState.data.find(l => l.featured)}
+                leadersLoading={leadersState.isLoading}
+                leadersErrorMessage={leadersState.errorMessage}
             />
         );
     };
 
-    const MenuPage = () => <Menu {...dishesState} />;
-    MenuPage.displayName = 'MenuPage';
+    function MenuPage(dishesState: AppState<Dish[]>) {
+        return <Menu {...dishesState} />;
+    }
 
-    const DishWithId: FunctionComponent<DishWithIdProps> = ({
+    function DishWithId({
         match: {
             params: { dishId },
         },
-    }) => {
+        addComment,
+        commentsState,
+        dishesState,
+    }: {
+        match: DishMatch;
+        addComment: (entry: CommentEntry) => void;
+        commentsState: AppState<Comment[]>;
+        dishesState: AppState<Dish[]>;
+    }) {
         return (
             <AddCommentProvider value={addComment}>
                 <DishDetail
                     dish={dishesState.data.find(d => d.id === parseInt(dishId))}
-                    isLoading={dishesState.isLoading}
-                    errorMessage={dishesState.errorMessage}
+                    dishLoading={dishesState.isLoading}
+                    dishErrorMessage={dishesState.errorMessage}
                     comments={commentsState.data.filter(c => c.dishId === parseInt(dishId))}
+                    commentsErrorMessage={commentsState.errorMessage}
+                    commentsLoading={commentsState.isLoading}
                 />
             </AddCommentProvider>
         );
-    };
+    }
 
-    const AboutUs: FunctionComponent<void> = () => {
+    function AboutUs(leadersState: AppState<Leader[]>) {
         return <About leaders={leadersState.data} />;
-    };
+    }
 
     return (
         <div>
             <Header />
             <Switch>
                 <Route path="/home" component={HomePage} />
-                <Route exact path="/menu" component={MenuPage} />
-                <Route path="/menu/:dishId" component={DishWithId} />
+                <Route exact path="/menu" component={() => MenuPage(dishesState)} />
+                <Route
+                    path="/menu/:dishId"
+                    component={({ match }: { match: DishMatch }) =>
+                        DishWithId({ match, addComment, commentsState, dishesState })
+                    }
+                />
                 <Route exact path="/contactus" component={Contact} />
-                <Route exact path="/aboutus" component={AboutUs} />
+                <Route exact path="/aboutus" component={() => AboutUs(leadersState)} />
                 <Redirect to="/home" />
             </Switch>
             <Footer />
