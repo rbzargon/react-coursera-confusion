@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Fade, Stagger } from 'react-animation-components';
 import { Button } from 'reactstrap';
 import { Comment } from '../shared/comments';
 import { CommentForm } from './CommentForm';
 import LoadingProgress from './LoadingProgress';
-
 export interface CommentsProps {
     comments?: Comment[];
     errorMessage: string;
@@ -21,19 +21,23 @@ export function Comments(props: CommentsProps) {
     ) : !!comments ? (
         <>
             <h4>Comments</h4>
-            {comments.map((c, idx) => (
-                <blockquote key={idx} className="blockquote">
-                    {c.comment}
-                    <footer className="blockquote-footer">
-                        <b>{c.author}</b>{' '}
-                        {new Date(c.date).toLocaleString(navigator.language, {
-                            year: 'numeric',
-                            month: 'short',
-                            day: '2-digit',
-                        })}
-                    </footer>
-                </blockquote>
-            ))}
+            <Stagger in>
+                {comments.map((c, idx) => (
+                    <Fade key={idx} in>
+                        <blockquote className="blockquote">
+                            {c.comment}
+                            <footer className="blockquote-footer">
+                                <b>{c.author}</b>{' '}
+                                {new Date(c.date).toLocaleString(navigator.language, {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: '2-digit',
+                                })}
+                            </footer>
+                        </blockquote>
+                    </Fade>
+                ))}
+            </Stagger>
             <Button onClick={() => setFormOpen(true)} type="button" className="btn btn-light">
                 <i className="fa fa-pencil"></i> Submit Comment
             </Button>

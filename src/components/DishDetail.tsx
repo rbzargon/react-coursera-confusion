@@ -1,4 +1,5 @@
 import React from 'react';
+import { FadeTransform } from 'react-animation-components';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { CommentEntry } from '../shared/commentEntry';
@@ -57,7 +58,14 @@ function DishDetail(props: DishDetailProps) {
             </div>
             <div className="row">
                 <div className="col-12 col-md-5 m-1">
-                    <DishCard dish={dish} isLoading={dishLoading} errorMessage={dishErrorMessage} />
+                    <FadeTransform
+                        in
+                        transformProps={{
+                            exitTransform: 'scale(0.5) translateY(-50%)',
+                        }}
+                    >
+                        <DishCard dish={dish} isLoading={dishLoading} errorMessage={dishErrorMessage} />
+                    </FadeTransform>
                 </div>
                 <div className="col-12 col-md-5 m-1">
                     <Comments
