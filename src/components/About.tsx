@@ -1,15 +1,18 @@
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
+import { Fade, Stagger } from 'react-animation-components';
 import { Link } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Leader as ILeader } from '../shared/leaders';
 import Leader from './Leader';
-
+import LoadingProgress from './LoadingProgress';
 interface AboutProps {
     leaders: ILeader[];
+    leadersLoading: boolean;
+    leadersErrorMessage: string;
 }
 
 export const About: React.SFC<AboutProps> = props => {
-    const leaders = !!props.leaders ? props.leaders.map((leader, i) => <Leader key={i} leader={leader} />) : '';
+    const { leaders, leadersErrorMessage, leadersLoading } = props;
 
     return (
         <div className="container">
@@ -82,7 +85,23 @@ export const About: React.SFC<AboutProps> = props => {
                     <h2>Corporate Leadership</h2>
                 </div>
                 <div className="col-12">
-                    <Media list>{leaders}</Media>
+                    {leadersLoading ? (
+                        <LoadingProgress />
+                    ) : leadersErrorMessage ? (
+                        <h4>{leadersErrorMessage}</h4>
+                    ) : (
+                        <Media list>
+                            <Stagger in>
+                                {!!leaders
+                                    ? leaders.map((leader, i) => (
+                                        <Fade key={i} in>
+                                            <Leader leader={leader} />
+                                        </Fade>
+                                    ))
+                                    : ''}
+                            </Stagger>
+                        </Media>
+                    )}
                 </div>
             </div>
         </div>

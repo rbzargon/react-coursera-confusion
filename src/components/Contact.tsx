@@ -2,21 +2,26 @@ import React, { FC, useContext } from 'react';
 import { Control, Errors, LocalForm, ValidatorFn } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Button, Col, Label, Row } from 'reactstrap';
-import { FeedbackContext } from '../context/feedback';
+import { Feedback, FeedbackContext } from '../context/feedback';
 
 const isRequired: ValidatorFn = (val: string = '') => {
-    return !!val && !!val.length;
+    return !!val;
 };
-const maxLength = (len: number) => ({ length } = '') => length >= len;
-const minLength = (len: number) => ({ length } = '') => length <= len;
+const maxLength = (len: number) => ({ length } = '') => length <= len;
+const minLength = (len: number) => ({ length } = '') => length >= len;
 const isNumber: ValidatorFn = (val: string) => !isNaN(Number(val));
 const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+_]+@[A-Z0-9.0]+\.[A-Z]{2,4}$/i.test(val);
 
-export const Contact: FC<void> = () => {
+export interface ContactProps {
+    postFeedback: (values: Feedback) => void;
+}
+
+export const Contact: FC<ContactProps> = props => {
+    const { postFeedback } = props;
     const { feedback: initialFeedback, setFeedback } = useContext(FeedbackContext);
 
     const handleSubmit = (values: object) => {
-        alert(`Current state: ${JSON.stringify(values)}`);
+        postFeedback(values);
         setFeedback({});
     };
 
@@ -93,7 +98,7 @@ export const Contact: FC<void> = () => {
                                     name="firstname"
                                     placeholder="First Name"
                                     className="form-control"
-                                    errors={{
+                                    validators={{
                                         required: isRequired,
                                         minLength: minLength(3),
                                         maxLength: maxLength(15),
@@ -123,7 +128,7 @@ export const Contact: FC<void> = () => {
                                     name="lastname"
                                     className="form-control"
                                     placeholder="Last Name"
-                                    errors={{
+                                    validators={{
                                         required: isRequired,
                                         minLength: minLength(3),
                                         maxLength: maxLength(15),
@@ -152,7 +157,7 @@ export const Contact: FC<void> = () => {
                                     name="telnum"
                                     className="form-control"
                                     placeholder="Tel. Number"
-                                    errors={{
+                                    validators={{
                                         required: isRequired,
                                         minLength: minLength(10),
                                         maxLength: maxLength(15),
@@ -183,7 +188,7 @@ export const Contact: FC<void> = () => {
                                     name="email"
                                     className="form-control"
                                     placeholder="Email"
-                                    errors={{
+                                    validators={{
                                         required: isRequired,
                                         validEmail: validEmail,
                                     }}

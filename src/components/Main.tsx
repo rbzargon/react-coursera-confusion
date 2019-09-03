@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { AddCommentProvider } from '../context/addComment';
-import { CommentsActions, DishesActions, PromotionsActions, LeadersActions } from '../redux/actionCreator';
+import {
+    CommentsActions,
+    DishesActions,
+    PromotionsActions,
+    LeadersActions,
+    postFeedback as _postFeedback,
+} from '../redux/actionCreator';
 import { RootState } from '../redux/configureStore';
 import About from './About';
 import Contact from './Contact';
@@ -18,6 +24,7 @@ import { AppState } from '../redux/appState';
 import { Dish } from '../shared/dishes';
 import { Leader } from '../shared/leaders';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Feedback } from '../context/feedback';
 
 const mapStateToProps = (state: RootState) => {
     return state;
@@ -25,6 +32,7 @@ const mapStateToProps = (state: RootState) => {
 
 interface DispatchFromProps {
     addComment: (entry: CommentEntry) => void;
+    postFeedback: (values: Feedback) => void;
     fetchComments: () => void;
     fetchDishes: () => void;
     fetchLeaders: () => void;
@@ -37,6 +45,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     fetchDishes: () => DishesActions.fetch()(dispatch),
     fetchLeaders: () => LeadersActions.fetch()(dispatch),
     fetchPromotions: () => PromotionsActions.fetch()(dispatch),
+    postFeedback: (values: Feedback) => _postFeedback(values)(dispatch),
 });
 
 interface DishMatch {
@@ -55,6 +64,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
         fetchLeaders,
         fetchPromotions,
         leadersState,
+        postFeedback,
         promotionsState,
     } = props;
 
@@ -113,7 +123,13 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
     }
 
     function AboutUs(leadersState: AppState<Leader[]>) {
-        return <About leaders={leadersState.data} />;
+        return (
+            <About
+                leaders={leadersState.data}
+                leadersLoading={leadersState.isLoading}
+                leadersErrorMessage={leadersState.errorMessage}
+            />
+        );
     }
 
     return (
@@ -130,7 +146,7 @@ export const Main: FunctionComponent<RootState & DispatchFromProps & RouteCompon
                                 DishWithId({ match, addComment, commentsState, dishesState })
                             }
                         />
-                        <Route exact path="/contactus" component={Contact} />
+                        <Route exact path="/contactus" component={() => <Contact postFeedback={postFeedback} />} />
                         <Route exact path="/aboutus" component={() => AboutUs(leadersState)} />
                         <Redirect to="/home" />
                     </Switch>

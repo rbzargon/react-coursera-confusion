@@ -8,6 +8,7 @@ import { ACTION_TYPE } from './actionType';
 import { AppAction } from './appAction';
 import { Leader } from '../shared/leaders';
 import { extend } from '../shared/utils';
+import { Feedback } from '../context/feedback';
 
 export interface AppActionCreator<T> {
     add: (data: T) => AppAction<T>;
@@ -85,7 +86,7 @@ const CommentExtension = () => {
                 .then(response => dispatch(CommentEntryExtension.addCommentEntry(response)))
                 .catch(error => {
                     console.log(`Post comments ${error}`);
-                    alert(`Comeent could not be posted:\nError: ${error.message}`);
+                    alert(`Comment could not be posted:\nError: ${error.message}`);
                 });
         };
     }
@@ -101,3 +102,21 @@ interface CommentsActions extends AppActionCreator<Comment[]> {
 export const DishesActions = AppActionCreatorFactory.create<Dish[]>('dishes');
 export const PromotionsActions = AppActionCreatorFactory.create<Promotion[]>('promotions');
 export const LeadersActions = AppActionCreatorFactory.create<Leader[]>('leaders');
+
+export const postFeedback = (values: Feedback) => (dispatch: Dispatch) => {
+    return fetch(`${BASE_URL}feedback`, {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+    })
+        .then(onResolved, onRejected)
+        .then(response => response.json())
+        .then(response => alert(`Server response: ${JSON.stringify(response)}`))
+        .catch(error => {
+            console.log(`Post feedback ${error}`);
+            alert(`Feedback could not be posted:\nError: ${error.message}`);
+        });
+};
